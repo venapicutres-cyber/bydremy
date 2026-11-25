@@ -426,8 +426,8 @@
   gap: 2px;
   padding: 3px;
   border-radius: 7px;
-  background: #fff;
-  box-shadow: 0 2px 10px rgba(31, 29, 26, 0.14);
+  background: rgba(31, 29, 26, 0.92);
+  box-shadow: 0 2px 10px rgba(31, 29, 26, 0.22);
   opacity: 1;
 }
 
@@ -440,13 +440,22 @@
   border: 0;
   border-radius: 5px;
   background: none;
-  color: var(--adm-muted);
+  color: #f4e6d2;
   cursor: pointer;
 }
 
 .adm-media__actions button:hover {
-  background: var(--adm-soft);
-  color: var(--adm-ink);
+  background: rgba(244, 230, 210, 0.16);
+  color: #fff1dc;
+}
+
+.adm-media__actions .adm-icon-btn--danger {
+  color: #ffb3ad;
+}
+
+.adm-media__actions .adm-icon-btn--danger:hover {
+  background: rgba(180, 67, 60, 0.28);
+  color: #ffd7d3;
 }
 
 .adm-dropzone {
