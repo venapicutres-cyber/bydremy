@@ -49,16 +49,20 @@ export function ConfirmButton({
   children,
   className = 'adm-btn adm-btn--danger-ghost',
   message = 'Hapus item ini? Tindakan tidak bisa dibatalkan.',
+  label = 'Hapus',
 }: {
   onConfirm: () => void;
   children: ReactNode;
   className?: string;
   message?: string;
+  label?: string;
 }) {
   return (
     <button
       type="button"
       className={className}
+      title={label}
+      aria-label={label}
       onClick={() => {
         if (window.confirm(message)) onConfirm();
       }}
