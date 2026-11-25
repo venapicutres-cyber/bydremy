@@ -98,7 +98,21 @@ export function AdminApp() {
             <Route path="invitations/:id" element={<InvitationEditorPage />} />
             <Route path="guestbook" element={<GuestbookPage />} />
             <Route path="password" element={<PasswordPage />} />
-            <Route path="*" element={<Navigate to={`/admin/invitations/${session.pageId ?? ''}`} replace />} />
+            <Route
+              path="*"
+              element={
+                session.pageId ? (
+                  <Navigate to={`/admin/invitations/${session.pageId}`} replace />
+                ) : (
+                  <div className="adm-page">
+                    <div className="adm-empty">
+                      <h3>Akun belum memiliki undangan</h3>
+                      <p>Hubungi administrator agar akun ini dihubungkan ke sebuah undangan.</p>
+                    </div>
+                  </div>
+                )
+              }
+            />
           </Route>
         </Routes>
       </SessionContext.Provider>

@@ -7,6 +7,7 @@ import { usePageStylesheet } from '../../hooks/usePageStylesheet';
 import { decodeHtmlEntities } from '../../utils/html';
 import { assetUrl, rewriteAssetRefs } from '../../utils/assetUrl';
 import { applyImageOverrides, resolveImageOverrides } from '../../utils/imageOverrides';
+import { editorPathForPage } from '../../utils/invitations';
 
 interface ClonedPageProps {
   pageId: number;
@@ -86,7 +87,7 @@ export function ClonedPage({ pageId, preview = false }: ClonedPageProps) {
           <span>
             Preview: <strong>{page.label}</strong> · {page.status === 'published' ? 'Published' : 'Draft'}
           </span>
-          <Link to={`/admin/pages/${page.id}`}>Kembali ke editor</Link>
+          <Link to={editorPathForPage(page)}>Kembali ke editor</Link>
         </div>
       )}
       {(!displayHtml || !cssReady) && (

@@ -14,3 +14,10 @@ export function invitationRoute(slug: string): string {
 export function isInvitation(page: PageRecord): boolean {
   return page.route.startsWith(INVITATION_PREFIX);
 }
+
+/** Halaman editor yang benar untuk setiap jenis halaman (dipakai tombol kembali dari preview). */
+export function editorPathForPage(page: PageRecord): string {
+  if (page.kind === 'template') return `/admin/pages/${page.id}`;
+  if (isInvitation(page)) return `/admin/invitations/${page.id}`;
+  return `/admin/homepage/${page.id}`;
+}
