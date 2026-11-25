@@ -1,4 +1,4 @@
-import { Eye, EyeOff, Image as ImageIcon } from 'lucide-react';
+import { Eye, EyeOff, Image as ImageIcon, Plus, RotateCcw, Trash2 } from 'lucide-react';
 import { useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react';
 import type { MediaRecord } from '../../../data/types';
 import { uploadImageToMedia, uploadMediaToMedia } from '../../../services/store';
@@ -6,7 +6,7 @@ import { resolveImageOverrides } from '../../../utils/imageOverrides';
 import type { PageImageGroup } from '../../../utils/pageAssets';
 import { MediaPicker } from '../../ui';
 import { SectionImages } from './SectionImages';
-import type { SectionInfo } from './types';
+import type { SectionHeading, SectionInfo } from './types';
 
 interface SectionsTabProps {
   sections: SectionInfo[];
@@ -22,6 +22,9 @@ interface SectionsTabProps {
   setImageOverrides: Dispatch<SetStateAction<Record<string, string>>>;
   uploadPageId?: number;
 }
+
+const HIDDEN_PREFIX = 'hidden::';
+const CUSTOM_PREFIX = 'custom::';
 
 const TAG_LABELS: Record<string, string> = {
   h1: 'Judul utama',
@@ -54,6 +57,42 @@ export function SectionsTab({
   const fileRef = useRef<HTMLInputElement>(null);
   const uploadTarget = useRef<PageImageGroup | null>(null);
   const resolved = useMemo(() => resolveImageOverrides(imageOverrides, media), [imageOverrides, media]);
+  const hiddenIds = useMemo(
+    () =>
+      new Set(
+        Object.keys(overrides)
+          .filter((id) => id.startsWith(HIDDEN_PREFIX))
+          .map((id) => id.slice(HIDDEN_PREFIX.length)),
+      ),
+    [overrides],
+  );
+
+  const addText = (sectionId: string) => {
+    const id = `${CUSTOM_PREFIX}${sectionId}::${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+    setOverrides((current) => ({ ...current, [id]: '' }));
+  };
+
+  const removeText = (heading: SectionHeading) => {
+    setOverrides((current) => {
+      const next = { ...current };
+      if (heading.id.startsWith(CUSTOM_PREFIX)) delete next[heading.id];
+      else next[`${HIDDEN_PREFIX}${heading.id}`] = '';
+      return next;
+    });
+  };
+
+  const restoreTexts = (ids: string[]) => {
+    setOverrides((current) => {
+      const next = { ...current };
+      ids.forEach((id) => delete next[`${HIDDEN_PREFIX}${id}`]);
+      return next;
+    });
+  };
+
+  const customHeadings = (sectionId: string): SectionHeading[] =>
+    Object.entries(overrides)
+      .filter(([id]) => id.startsWith(`${CUSTOM_PREFIX}${sectionId}::`))
+      .map(([id, text]) => ({ id, tag: 'p', text, label: 'Teks tambahan' }));
 
   const assign = (group: PageImageGroup, url: string, picked?: MediaRecord) => {
     const value = picked ? `media:${picked.id}` : url;
@@ -131,6 +170,11 @@ export function SectionsTab({
 
       {sections.map((section, index) => {
         const isHidden = hidden.includes(section.id);
+        const hiddenHere = section.headings.filter((heading) => hiddenIds.has(heading.id));
+        const visibleHeadings = [
+          ...section.headings.filter((heading) => !hiddenIds.has(heading.id)),
+          ...customHeadings(section.id),
+        ];
         return (
           <article key={section.id} className={`adm-section ${isHidden ? 'is-hidden' : ''}`}>
             <header>
@@ -141,7 +185,25 @@ export function SectionsTab({
                 </div>
               </div>
               <div className="adm-section__tools">
-                <span className="adm-muted">{section.headings.length} teks</span>
+                <span className="adm-muted">{visibleHeadings.length} teks</span>
+                {!isNew && (
+                  <button
+                    type="button"
+                    className="adm-btn adm-btn--sm adm-btn--ghost"
+                    onClick={() => addText(section.id)}
+                  >
+                    <Plus size={14} /> Tambah
+                  </button>
+                )}
+                {hiddenHere.length > 0 && (
+                  <button
+                    type="button"
+                    className="adm-btn adm-btn--sm adm-btn--ghost"
+                    onClick={() => restoreTexts(hiddenHere.map((heading) => heading.id))}
+                  >
+                    <RotateCcw size={14} /> Pulihkan ({hiddenHere.length})
+                  </button>
+                )}
                 <button
                   type="button"
                   className="adm-btn adm-btn--sm adm-btn--ghost"
@@ -157,21 +219,33 @@ export function SectionsTab({
               </div>
             </header>
 
-            {section.headings.length > 0 && (
+            {visibleHeadings.length > 0 && (
               <div className="adm-section__texts">
-                {section.headings.map((heading) => {
+                {visibleHeadings.map((heading) => {
                   const current = overrides[heading.id] ?? heading.text;
                   const label = heading.label || TAG_LABELS[heading.tag] || heading.tag.toUpperCase();
                   return (
-                    <label key={heading.id} className="adm-mini-field">
-                      <span className="adm-mini-field__head">
-                        <em>{label}</em>
-                      </span>
-                      <input
-                        value={current}
-                        onChange={(event) => setOverrides((state) => ({ ...state, [heading.id]: event.target.value }))}
-                      />
-                    </label>
+                    <div key={heading.id} className="adm-mini-field adm-mini-field--row">
+                      <label className="adm-mini-field__body">
+                        <span className="adm-mini-field__head">
+                          <em>{label}</em>
+                        </span>
+                        <input
+                          value={current}
+                          onChange={(event) =>
+                            setOverrides((state) => ({ ...state, [heading.id]: event.target.value }))
+                          }
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        className="adm-btn adm-btn--sm adm-btn--ghost adm-mini-field__delete"
+                        title="Hapus teks ini dari undangan"
+                        onClick={() => removeText(heading)}
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
                   );
                 })}
               </div>
@@ -218,7 +292,7 @@ export function SectionsTab({
               />
             )}
 
-            {section.headings.length === 0 && section.media.length === 0 && section.links.length === 0 && (
+            {visibleHeadings.length === 0 && section.media.length === 0 && section.links.length === 0 && (
               <p className="adm-section__asset-note">
                 <ImageIcon size={14} />
                 <span>

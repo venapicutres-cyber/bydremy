@@ -256,6 +256,24 @@
   border-color: var(--adm-gold);
 }
 
+.adm-mini-field--row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 6px;
+}
+
+.adm-mini-field__body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.adm-mini-field__delete {
+  padding: 7px 8px;
+}
+
 .adm-serp {
   padding: 16px;
   border: 1px solid var(--adm-line);

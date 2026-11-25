@@ -17,6 +17,19 @@ function textTarget(root: HTMLElement, key: string): HTMLElement | null {
   return target;
 }
 
+function resolveTextTarget(root: HTMLElement, id: string): HTMLElement | null {
+  const separator = id.indexOf('::path:');
+  const widget = root.querySelector<HTMLElement>(`[data-id="${separator < 0 ? id : id.slice(0, separator)}"]`);
+  if (!widget) return null;
+  if (separator >= 0) return textTarget(root, id);
+  return (
+    widget.querySelector<HTMLElement>('.elementor-heading-title') ||
+    widget.querySelector<HTMLElement>('.elementor-text-editor') ||
+    widget.querySelector<HTMLElement>('.elementor-widget-container') ||
+    widget
+  );
+}
+
 function setTextPreservingChildElements(target: HTMLElement, text: string) {
   const walker = document.createTreeWalker(target, NodeFilter.SHOW_TEXT);
   const firstText = walker.nextNode();
@@ -61,21 +74,37 @@ export function applyPageState({ page, root, cleanups }: ClonedPageContext) {
     });
   });
 
+  Object.keys(page.textOverrides || {})
+    .filter((id) => id.startsWith('hidden::'))
+    .forEach((id) => {
+      const target = resolveTextTarget(root, id.slice('hidden::'.length));
+      if (!target) return;
+      const previous = target.style.display;
+      target.style.display = 'none';
+      cleanups.push(() => {
+        target.style.display = previous;
+      });
+    });
+
+  Object.entries(page.textOverrides || {})
+    .filter(([id]) => id.startsWith('custom::'))
+    .forEach(([id, text]) => {
+      const sectionId = id.split('::')[1];
+      const section = root.querySelector<HTMLElement>(`[data-id="${sectionId}"]`);
+      if (!section) return;
+      const paragraph = document.createElement('p');
+      paragraph.className = 'adm-custom-text';
+      paragraph.textContent = text;
+      section.appendChild(paragraph);
+      cleanups.push(() => paragraph.remove());
+    });
+
   Object.entries(page.textOverrides || {}).forEach(([id, text]) => {
-    const separator = id.indexOf('::path:');
-    const widget = root.querySelector<HTMLElement>(`[data-id="${separator < 0 ? id : id.slice(0, separator)}"]`);
-    if (!widget) return;
-    if (separator >= 0) {
-      const target = textTarget(root, id);
-      if (target) setTextPreservingChildElements(target, text);
-      return;
-    }
-    const target =
-      widget.querySelector<HTMLElement>('.elementor-heading-title') ||
-      widget.querySelector<HTMLElement>('.elementor-text-editor') ||
-      widget.querySelector<HTMLElement>('.elementor-widget-container') ||
-      widget;
-    target.textContent = text;
+    if (id.startsWith('hidden::') || id.startsWith('custom::')) return;
+    const target = resolveTextTarget(root, id);
+    if (!target) return;
+    if (id.includes('::path:')) setTextPreservingChildElements(target, text);
+    else target.textContent = text;
   });
 
   Object.entries(page.linkOverrides || {}).forEach(([from, to]) => {
