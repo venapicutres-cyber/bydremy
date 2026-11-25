@@ -1,0 +1,356 @@
+/* ==========================================================================
+   bydreamy clone — base runtime + brand pages
+   Rules in this file never restyle the cloned Elementor markup. They only
+   cover the app shell, loader, lightbox and the React-built catalogue pages.
+   ========================================================================== */
+
+:root {
+  --brand-ink: #202020;
+  --brand-cream: #fffbf6;
+  --brand-gold: #ad8e70;
+  --brand-gold-deep: #8d6e44;
+  --brand-wine: #562231;
+  --brand-line: rgba(32, 32, 32, 0.12);
+  --font-sans: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --font-script: 'MonteCarlo', 'Great Vibes', cursive;
+}
+
+body.cloned-body {
+  margin: 0;
+  background: #fff;
+  /* PowerPack's bounce-in animation translates cards ±100px, which would
+     otherwise create a transient horizontal scrollbar. `clip` (unlike
+     hidden) does not establish a scroll container, so sticky panels keep
+     working. */
+  overflow-x: clip;
+}
+
+.bydreamy-cloned-shell {
+  position: relative;
+  min-height: 100vh;
+}
+
+.bydreamy-cloned {
+  isolation: isolate;
+}
+
+/* Pemutar video yang dibuat ulang dari data-settings Elementor. */
+.bydreamy-cloned .elementor-video iframe,
+.bydreamy-cloned .elementor-video video,
+.bydreamy-cloned .bydreamy-video-embed,
+.bydreamy-cloned .bydreamy-video-file {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  border: 0;
+  object-fit: cover;
+}
+
+.bydreamy-cloned .elementor-background-video-container iframe.bydreamy-bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  pointer-events: none;
+}
+
+.bydreamy-preview-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 20px;
+  background: #202020;
+  color: #fffbf6;
+  font: 500 12px/1.4 var(--font-sans);
+  letter-spacing: 0.02em;
+}
+
+.bydreamy-preview-bar a {
+  color: #d9c3a6;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(217, 195, 166, 0.5);
+}
+
+.bydreamy-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: #fffbf6;
+  color: #6b5a47;
+  font: 400 11px/1 var(--font-sans);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.bydreamy-loader img {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  object-fit: cover;
+  animation: bydreamy-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes bydreamy-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(0.96); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+.bydreamy-state {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 40px 24px;
+  text-align: center;
+  background: var(--brand-cream);
+  color: var(--brand-ink);
+  font-family: var(--font-sans);
+}
+
+.bydreamy-state__eyebrow {
+  margin: 0;
+  color: var(--brand-gold-deep);
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.bydreamy-state h1 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(34px, 6vw, 54px);
+  font-weight: 500;
+  line-height: 1.08;
+}
+
+.bydreamy-state p {
+  max-width: 480px;
+  margin: 0;
+  color: #665d54;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.bydreamy-btn,
+.site-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 24px;
+  border: 1px solid var(--brand-ink);
+  border-radius: 999px;
+  background: var(--brand-ink);
+  color: #fff;
+  font: 500 11px/1 var(--font-sans);
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+
+.bydreamy-btn:hover,
+.site-btn:hover {
+  transform: translateY(-2px);
+}
+
+.site-btn.is-disabled,
+.site-btn.is-disabled:hover {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ------------------------------------------------------------------ lightbox */
+.bydreamy-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: rgba(15, 12, 10, 0.92);
+  backdrop-filter: blur(8px);
+  animation: bydreamy-fade 0.25s ease;
+}
+
+@keyframes bydreamy-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.bydreamy-lightbox__close {
+  position: absolute;
+  top: 22px;
+  right: 26px;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.bydreamy-lightbox__figure {
+  max-width: min(1040px, 94vw);
+  max-height: 88vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.bydreamy-lightbox__figure img {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.bydreamy-lightbox__figure figcaption {
+  color: rgba(255, 255, 255, 0.7);
+  font: 400 12px/1.5 var(--font-sans);
+}
+
+.bydreamy-modal-panel {
+  width: min(460px, 92vw);
+  padding: 38px 34px;
+  border-radius: 18px;
+  background: #fffbf6;
+  color: #202020;
+  font-family: var(--font-sans);
+  text-align: center;
+}
+
+.bydreamy-modal-panel__eyebrow {
+  margin: 0 0 10px;
+  color: #8d6e44;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.bydreamy-modal-panel h3 {
+  margin: 0 0 12px;
+  font-family: var(--font-serif);
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.bydreamy-modal-panel p {
+  margin: 0;
+  color: #665d54;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.bydreamy-sticky {
+  position: sticky !important;
+  top: 0;
+  z-index: 999;
+  /* Flex children stretch to the tallest sibling by default, which turns a
+     sticky 100vh panel into a page-height column and breaks cover sizing. */
+  align-self: flex-start;
+}
+
+/* ------------------------------------------------------------- buku tamu */
+#realtime-comments .bydreamy-wishes {
+  display: flex;
+  flex-direction: column;
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 6px;
+  text-align: left;
+}
+
+#realtime-comments .bydreamy-wishes__empty,
+#realtime-comments .bydreamy-wishes__note {
+  margin: 0;
+  padding: 14px 0;
+  color: #6b5a47;
+  font: italic 400 12px/1.7 var(--font-sans);
+}
+
+#realtime-comments .bydreamy-wishes__note {
+  font-style: normal;
+  font-size: 11px;
+  color: #8d6e44;
+}
+
+#realtime-comments .bydreamy-wish__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+#realtime-comments .bydreamy-wish__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font: 500 9px/1.6 var(--font-sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+#realtime-comments .bydreamy-wish__badge.is-present {
+  background: rgba(74, 125, 78, 0.12);
+  color: #3d6b41;
+}
+
+#realtime-comments .bydreamy-wish__badge.is-absent {
+  background: rgba(141, 110, 68, 0.12);
+  color: #8d6e44;
+}
+
+#realtime-comments .bydreamy-wish small {
+  display: block;
+  margin-top: 4px;
+  color: #9b9187;
+  font: 400 10px/1.6 var(--font-sans);
+  letter-spacing: 0.02em;
+}
+
+.bydreamy-wish {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  font-family: var(--font-sans);
+}
+
+.bydreamy-wish strong {
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 13px;
+}
+
+.bydreamy-wish span {
+  color: #8d6e44;
+  font-size: 11px;
+}
+
+.bydreamy-wish p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: 1.7;
+}
+

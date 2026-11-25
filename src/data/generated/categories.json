@@ -1,0 +1,42 @@
+[
+  {
+    "id": "heritage",
+    "name": "Heritage",
+    "slug": "heritage",
+    "tagline": "Klasik, hangat, dan penuh detail",
+    "description": "Sentuhan warisan Nusantara dengan ornamen, motif, dan tipografi klasik yang dirangkai modern.",
+    "accent": "#AD8E70",
+    "cover": "/wp-content/uploads/2026/02/AMEERA-SLIDE-2.webp",
+    "count": 6
+  },
+  {
+    "id": "moody",
+    "name": "Moody",
+    "slug": "moody",
+    "tagline": "Berani, emosional, tak biasa",
+    "description": "Palet gelap dan warna berani untuk pasangan yang ingin undangan berbeda dari yang lain.",
+    "accent": "#562231",
+    "cover": "/wp-content/uploads/2024/05/MOODY-WAVE-1024x1024.webp",
+    "count": 3
+  },
+  {
+    "id": "premium",
+    "name": "Premium",
+    "slug": "premium",
+    "tagline": "Mewah, sinematik, berkelas",
+    "description": "Koleksi signature dengan komposisi sinematik, detail emas, dan pengalaman undangan yang mewah.",
+    "accent": "#8D6E44",
+    "cover": "/wp-content/uploads/2024/09/PREVIEW_Flara.webp",
+    "count": 11
+  },
+  {
+    "id": "watercolor",
+    "name": "Watercolor",
+    "slug": "watercolor",
+    "tagline": "Lembut, artistik, romantis",
+    "description": "Lukisan cat air dengan nuansa lembut untuk pernikahan yang intim dan puitis.",
+    "accent": "#987070",
+    "cover": "/wp-content/uploads/2023/05/couple-5657196-min-scaled-1.jpg",
+    "count": 5
+  }
+]

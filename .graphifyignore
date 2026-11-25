@@ -1,0 +1,23 @@
+# graphify — batasi graf ke kode & konten milik proyek ini saja
+
+# Dependency & build artifact
+node_modules/
+dist/
+
+# Output graphify itu sendiri
+graphify-out/
+
+# Aset mentah mirror WordPress: 312 MB, 7.520 gambar, CSS tidak dikenali graphify
+public/
+
+# Lockfile raksasa, tanpa nilai graf
+package-lock.json
+
+# Dokumentasi skill agent pihak ketiga (423 file .md, bukan bagian proyek)
+.agents/
+.claude/
+.gemini/
+
+# Halaman HTML hasil clone Elementor (markup WP, 412K kata).
+# Hapus baris ini lalu jalankan `graphify --update` kalau ingin halaman ikut masuk graf.
+src/content/pages/

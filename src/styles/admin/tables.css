@@ -1,0 +1,610 @@
+/* ---------------------------------------------------------------- toolbar */
+.adm-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid var(--adm-line);
+  border-radius: 12px;
+}
+
+.adm-toolbar--sticky {
+  position: sticky;
+  top: 68px;
+  z-index: 20;
+}
+
+.adm-toolbar__count {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  font-size: 11.5px;
+  color: var(--adm-muted);
+}
+
+.adm-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 12px;
+  min-width: 220px;
+  flex: 1;
+  max-width: 360px;
+  background: var(--adm-soft);
+  border: 1px solid var(--adm-line);
+  border-radius: 8px;
+  color: var(--adm-muted);
+}
+
+.adm-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 12.5px;
+  color: var(--adm-ink);
+}
+
+.adm-search input::placeholder {
+  color: #a9a094;
+}
+
+.adm-seg {
+  display: inline-flex;
+  padding: 3px;
+  background: var(--adm-soft);
+  border: 1px solid var(--adm-line);
+  border-radius: 8px;
+}
+
+.adm-seg button {
+  height: 28px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  font-size: 11.5px;
+  color: var(--adm-ink);
+  cursor: pointer;
+}
+
+.adm-seg button:hover:not(.is-active) {
+  background: #fff;
+}
+
+.adm-seg button.is-active {
+  background: #fff;
+  color: var(--adm-ink);
+  box-shadow: 0 1px 3px rgba(31, 29, 26, 0.1);
+}
+
+.adm-filter-tabs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+
+.adm-filter-tabs button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 30px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 7px;
+  background: none;
+  font-size: 11.5px;
+  color: var(--adm-muted);
+  cursor: pointer;
+}
+
+.adm-filter-tabs button:hover {
+  background: var(--adm-soft);
+  color: var(--adm-ink);
+}
+
+.adm-filter-tabs button.is-active {
+  background: var(--adm-ink);
+  color: #fdf9f3;
+}
+
+.adm-seg button:focus-visible,
+.adm-filter-tabs button:focus-visible {
+  outline: 2px solid var(--adm-gold-deep);
+  outline-offset: 2px;
+}
+
+.adm-select {
+  height: 34px;
+  padding: 0 30px 0 10px;
+  border: 1px solid var(--adm-line);
+  border-radius: 8px;
+  background: #fff url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237a736a' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center;
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--adm-ink);
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.adm-select:focus {
+  border-color: var(--adm-gold);
+}
+
+/* The cloned hello-elementor stylesheet sets `select { width: 100% }`, which
+   is global. Toolbar filters should keep their own content width. */
+.adm-toolbar > .adm-select {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.adm-select--sm {
+  height: 28px;
+  font-size: 11.5px;
+}
+
+.adm-bulkbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 16px;
+  padding: 9px 14px;
+  background: #f4ece0;
+  border: 1px solid #e3d5c1;
+  border-radius: 9px;
+  font-size: 12px;
+}
+
+.adm-bulkbar span {
+  font-weight: 600;
+}
+
+.adm-bulkbar button {
+  border: 0;
+  background: none;
+  font-size: 11.5px;
+  color: var(--adm-gold-deep);
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.adm-bulkbar button.is-danger {
+  color: var(--adm-red);
+}
+
+.adm-bulkbar button:focus-visible {
+  outline: 2px solid var(--adm-gold-deep);
+  outline-offset: 2px;
+}
+
+.adm-bulkbar__clear {
+  margin-left: auto;
+  text-decoration: none !important;
+  color: var(--adm-muted) !important;
+}
+
+/* ------------------------------------------------------------------ table */
+.adm-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.adm-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.adm-table th {
+  padding: 11px 14px;
+  text-align: left;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--adm-muted);
+  background: var(--adm-soft);
+  border-bottom: 1px solid var(--adm-line);
+  white-space: nowrap;
+}
+
+.adm-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #f0ebe3;
+  vertical-align: middle;
+}
+
+.adm-table tbody tr:hover {
+  background: #fdfbf8;
+}
+
+.adm-table tbody tr.is-selected {
+  background: #fbf5ec;
+}
+
+.adm-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.adm-table td > strong {
+  display: block;
+  font-weight: 500;
+}
+
+.adm-table td > small {
+  display: block;
+  margin-top: 2px;
+  font-size: 10.5px;
+  color: var(--adm-muted);
+}
+
+.adm-table .is-right {
+  text-align: right;
+}
+
+.adm-table .is-center {
+  text-align: center;
+}
+
+.adm-check-col {
+  width: 34px;
+  text-align: center;
+}
+
+.adm-check-col input,
+.adm-table input[type='checkbox'] {
+  accent-color: var(--adm-gold-deep);
+}
+
+.adm-row-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 180px;
+}
+
+.adm-row-title img {
+  width: 34px;
+  height: 42px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid var(--adm-line);
+  background: var(--adm-soft);
+}
+
+.adm-row-title__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 42px;
+  border-radius: 5px;
+  background: var(--adm-soft);
+  color: var(--adm-gold-deep);
+  border: 1px solid var(--adm-line);
+}
+
+.adm-row-title a {
+  font-weight: 500;
+  color: var(--adm-ink);
+}
+
+.adm-row-title a:hover {
+  color: var(--adm-gold-deep);
+}
+
+.adm-row-title small {
+  display: block;
+  max-width: 280px;
+  font-size: 10.5px;
+  color: var(--adm-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adm-code {
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 10.5px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--adm-soft);
+  border: 1px solid var(--adm-line);
+  color: #6c6256;
+  white-space: nowrap;
+}
+
+.adm-muted {
+  color: var(--adm-muted);
+  font-size: 11.5px;
+}
+
+.adm-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  justify-content: flex-end;
+}
+
+.adm-actions a,
+.adm-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--adm-line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--adm-ink);
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+}
+
+.adm-actions a:hover,
+.adm-actions button:hover {
+  border-color: var(--adm-ink);
+  background: var(--adm-ink);
+  color: #fff;
+}
+
+.adm-actions a:focus-visible,
+.adm-actions button:focus-visible,
+.adm-status-btn:focus-visible {
+  outline: 2px solid var(--adm-gold-deep);
+  outline-offset: 2px;
+}
+
+.adm-actions button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.adm-actions .adm-icon-btn--danger:hover,
+.adm-icon-btn--danger:hover {
+  border-color: var(--adm-red);
+  background: rgba(180, 67, 60, 0.1);
+  color: var(--adm-red);
+}
+
+.adm-person {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.adm-person strong {
+  display: block;
+  font-weight: 500;
+  font-size: 12.5px;
+}
+
+.adm-person__name {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 12.5px;
+  color: var(--adm-ink);
+  cursor: pointer;
+}
+
+.adm-person__name svg {
+  color: var(--adm-muted);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.adm-person__name:hover {
+  color: var(--adm-gold-deep);
+}
+
+.adm-person__name:hover svg {
+  opacity: 1;
+}
+
+.adm-person small {
+  display: block;
+  font-size: 10.5px;
+  color: var(--adm-muted);
+}
+
+.adm-contact {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.adm-contact a {
+  color: var(--adm-muted);
+  display: inline-flex;
+}
+
+.adm-contact a:hover {
+  color: var(--adm-gold-deep);
+}
+
+.adm-contact span {
+  font-size: 11px;
+  color: var(--adm-muted);
+}
+
+.adm-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 11px;
+  background: var(--adm-soft);
+  border: 1px solid var(--adm-line);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------- pills */
+.adm-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 9px;
+  border-radius: 11px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.adm-pill::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.adm-pill--published,
+.adm-pill--paid,
+.adm-pill--completed,
+.adm-pill--active {
+  background: rgba(47, 125, 91, 0.1);
+  color: var(--adm-green);
+}
+
+.adm-pill--draft,
+.adm-pill--pending,
+.adm-pill--inactive {
+  background: rgba(176, 123, 44, 0.12);
+  color: var(--adm-amber);
+}
+
+.adm-pill--in_progress,
+.adm-pill--in-progress {
+  background: rgba(60, 96, 148, 0.1);
+  color: #3c6094;
+}
+
+.adm-pill--cancelled {
+  background: rgba(180, 67, 60, 0.1);
+  color: var(--adm-red);
+}
+
+.adm-status-btn {
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+@media (forced-colors: active) {
+  .adm-actions a,
+  .adm-actions button {
+    border-color: ButtonText;
+    background: ButtonFace;
+    color: ButtonText;
+  }
+
+  .adm-actions a:hover,
+  .adm-actions button:hover {
+    border-color: Highlight;
+    background: Highlight;
+    color: HighlightText;
+  }
+
+  .adm-actions a:focus-visible,
+  .adm-actions button:focus-visible,
+  .adm-status-btn:focus-visible,
+  .adm-seg button:focus-visible,
+  .adm-filter-tabs button:focus-visible,
+  .adm-bulkbar button:focus-visible {
+    outline-color: Highlight;
+  }
+}
+
+.adm-status-select {
+  height: 26px;
+  padding: 0 22px 0 8px;
+  border-radius: 13px;
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-size: 10.5px;
+  font-weight: 500;
+  text-transform: capitalize;
+  appearance: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.adm-status-select.is-pending {
+  background: rgba(176, 123, 44, 0.12);
+  color: var(--adm-amber);
+}
+
+.adm-status-select.is-paid,
+.adm-status-select.is-completed {
+  background: rgba(47, 125, 91, 0.1);
+  color: var(--adm-green);
+}
+
+.adm-status-select.is-in_progress {
+  background: rgba(60, 96, 148, 0.1);
+  color: #3c6094;
+}
+
+.adm-status-select.is-cancelled {
+  background: rgba(180, 67, 60, 0.1);
+  color: var(--adm-red);
+}
+
+/* --------------------------------------------------------------- buku tamu */
+.adm-pill--present {
+  background: rgba(47, 125, 91, 0.1);
+  color: var(--adm-green);
+}
+
+.adm-pill--absent {
+  background: rgba(176, 123, 44, 0.12);
+  color: var(--adm-amber);
+}
+
+.adm-guestbook-message {
+  max-width: 460px;
+  white-space: pre-wrap;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #5f5850;
+}
+
+.adm-guestbook-page {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.is-spinning {
+  animation: adm-spin 0.9s linear infinite;
+}
+
+@keyframes adm-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+

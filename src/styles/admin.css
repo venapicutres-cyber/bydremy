@@ -1,0 +1,10 @@
+@import './admin/tokens.css';
+@import './admin/shell.css';
+@import './admin/ui.css';
+@import './admin/tables.css';
+@import './admin/forms.css';
+@import './admin/editor.css';
+@import './admin/content.css';
+@import './admin/settings.css';
+@import './admin/auth.css';
+@import './admin/responsive.css';

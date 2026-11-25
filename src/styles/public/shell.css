@@ -1,0 +1,225 @@
+/* ==========================================================================
+   Brand pages shell (catalogue, template detail, about)
+   ========================================================================== */
+.bydreamy-site {
+  background: var(--brand-cream);
+  color: var(--brand-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.bydreamy-site *,
+.bydreamy-site *::before,
+.bydreamy-site *::after {
+  box-sizing: border-box;
+}
+
+.bydreamy-site a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.bydreamy-site img {
+  max-width: 100%;
+  display: block;
+}
+
+.site-container {
+  width: min(1280px, calc(100% - 80px));
+  margin: 0 auto;
+}
+
+.site-eyebrow {
+  margin: 0 0 18px;
+  color: var(--brand-gold-deep);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+.site-announcement {
+  padding: 9px 20px;
+  background: var(--brand-wine);
+  color: #fff5ec;
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  border-bottom: 1px solid var(--brand-line);
+  background: rgba(255, 251, 246, 0.92);
+  backdrop-filter: blur(14px);
+}
+
+/* Homepage keeps its own sticky header, so the site nav scrolls away. */
+.bydreamy-home-shell .site-header {
+  position: relative;
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  min-height: 78px;
+}
+
+.site-wordmark {
+  font-family: var(--font-serif);
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.site-wordmark span {
+  color: var(--brand-gold-deep);
+}
+
+.site-wordmark--light {
+  color: #fffbf6;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2vw, 30px);
+}
+
+.site-nav a {
+  position: relative;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+}
+
+.site-nav a:not(.site-nav__cta)::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0;
+  height: 1px;
+  background: var(--brand-gold-deep);
+  transition: width 0.25s ease;
+}
+
+.site-nav a:hover::after,
+.site-nav a.is-active::after {
+  width: 100%;
+}
+
+.site-nav__cta {
+  padding: 11px 20px;
+  border: 1px solid var(--brand-ink);
+  border-radius: 999px;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.site-nav__cta:hover {
+  background: var(--brand-ink);
+  color: var(--brand-cream);
+}
+
+.site-menu-btn {
+  display: none;
+  width: 42px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--brand-line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--brand-ink);
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------ footer */
+.site-footer {
+  padding: 78px 0 26px;
+  background: #1c1917;
+  color: #e9e1d6;
+}
+
+.site-footer__top {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, 0.8fr) 1fr;
+  gap: 48px;
+  padding-bottom: 58px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.site-footer__brand p {
+  max-width: 300px;
+  margin: 18px 0 24px;
+  color: rgba(233, 225, 214, 0.66);
+  font-size: 12px;
+  line-height: 1.9;
+}
+
+.site-footer__social {
+  display: flex;
+  gap: 10px;
+}
+
+.site-footer__social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.site-footer__social a:hover {
+  background: var(--brand-gold);
+  color: #1c1917;
+}
+
+.site-footer__col h4 {
+  margin: 0 0 20px;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.site-footer__col a,
+.site-footer__col p {
+  display: block;
+  margin: 0 0 10px;
+  color: rgba(233, 225, 214, 0.66);
+  font-size: 12px;
+  line-height: 1.7;
+  transition: color 0.2s ease;
+}
+
+.site-footer__col a:hover {
+  color: var(--brand-gold);
+}
+
+.site-footer__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 22px;
+  color: rgba(233, 225, 214, 0.45);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.site-footer__bottom a {
+  color: rgba(233, 225, 214, 0.6);
+}
+

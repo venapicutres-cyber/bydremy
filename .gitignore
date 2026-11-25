@@ -1,0 +1,16 @@
+.env*
+!.env.example
+node_modules/
+dist/
+.e2e/
+.agents/
+.claude/
+.codex/
+.cursor/
+.gemini/
+.impeccable/
+.trae/
+.screenshots/
+supabase/.temp/
+-
+*.log

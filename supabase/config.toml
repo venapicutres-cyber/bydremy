@@ -1,0 +1,11 @@
+project_id = "bydreamy"
+
+# Pendaftaran publik dimatikan: akun admin hanya dibuat lewat service role.
+# CATATAN: jangan set `[auth.email] enable_signup = false` — di CLI ini properti
+# itu mematikan provider email sekaligus (login ikut mati). Cukup yang global.
+# Hanya properti yang dideklarasikan di sini yang didorong ke proyek terhubung.
+[auth]
+enable_signup = false
+
+[auth.email]
+enable_signup = true

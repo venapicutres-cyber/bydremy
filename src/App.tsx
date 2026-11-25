@@ -1,0 +1,71 @@
+import { useEffect } from 'react';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import { ClonedPage } from './components/cloned/ClonedPage';
+import { SeoManager } from './components/SeoManager';
+import { SiteHeader } from './components/site/SiteHeader';
+import { CustomSiteLayout } from './layouts/CustomSiteLayout';
+import { CatalogPage } from './pages/CatalogPage';
+import { TemplateDetailPage } from './pages/TemplateDetailPage';
+import { AboutPage } from './pages/AboutPage';
+import { NotFoundPage } from './components/site/NotFoundPage';
+import { AdminApp } from './admin/AdminApp';
+import { useDatabase } from './services/store';
+import { canonicalPath, isAdminPath } from './utils/route';
+
+/**
+ * Every cloned WordPress page is served on its original route so the design,
+ * navigation and links inside the markup behave exactly like the live site.
+ */
+function CloneRoutes() {
+  const db = useDatabase();
+  const location = useLocation();
+
+  const path = canonicalPath(location.pathname);
+  const page = db.pages.find(
+    (item) => canonicalPath(item.route) === path || item.slug === path.replace(/^\//, ''),
+  );
+
+  if (!page) return <NotFoundPage />;
+  // Drafts stay available in the dashboard preview but are not public.
+  if (page.status === 'draft') return <NotFoundPage />;
+  if (page.kind === 'home') {
+    return (
+      <div className="bydreamy-home-shell">
+        <div className="bydreamy-site">
+          <SiteHeader />
+        </div>
+        <ClonedPage key={page.id} pageId={page.id} />
+      </div>
+    );
+  }
+  return <ClonedPage key={page.id} pageId={page.id} />;
+}
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    if (!isAdminPath(pathname)) window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
+
+export function App() {
+  return (
+    <>
+      <ScrollToTop />
+      <SeoManager />
+      <Routes>
+        <Route path="/admin/*" element={<AdminApp />} />
+
+        <Route element={<CustomSiteLayout />}>
+          <Route path="/katalog" element={<CatalogPage />} />
+          <Route path="/katalog/:category" element={<CatalogPage />} />
+          <Route path="/template/:slug" element={<TemplateDetailPage />} />
+          <Route path="/tentang" element={<AboutPage />} />
+        </Route>
+
+        <Route path="/*" element={<CloneRoutes />} />
+      </Routes>
+    </>
+  );
+}
