@@ -37,7 +37,9 @@ const money = (text) => Number(String(text).replace(/[^\d]/g, '')) || 0;
 
 // ---------------------------------------------------------------- login
 await go('/admin');
-await page.getByLabel('Password', { exact: true }).fill('admin123');
+const adminPassword = process.env.QA_ADMIN_PASSWORD;
+if (!adminPassword) throw new Error('QA_ADMIN_PASSWORD belum diisi.');
+await page.getByLabel('Password', { exact: true }).fill(adminPassword);
 await page.getByRole('button', { name: /Masuk Dashboard/ }).click();
 await page.waitForFunction(() => Boolean(localStorage.getItem('bydreamy.admin.session')), null, { timeout: 8000 });
 
