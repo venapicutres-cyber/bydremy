@@ -1,0 +1,230 @@
+/* ------------------------------------------------------------------ share wa */
+.share-wa {
+  padding-bottom: 100px;
+}
+
+.share-wa__hero {
+  padding: 92px 0 60px;
+  background: linear-gradient(120deg, #fffbf6 0%, #f5ecdf 100%);
+}
+
+.share-wa__hero .site-container {
+  max-width: 760px;
+}
+
+.share-wa__hero h1 {
+  margin: 0 0 20px;
+  font-family: var(--font-serif);
+  font-size: clamp(42px, 6vw, 74px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+}
+
+.share-wa__hero h1 em {
+  color: var(--brand-gold-deep);
+  font-family: var(--font-script);
+  font-style: normal;
+  font-weight: 400;
+}
+
+.share-wa__hero .site-container > p:not(.site-eyebrow) {
+  max-width: 580px;
+  margin: 0;
+  color: #5f574e;
+  font-size: 13px;
+  line-height: 1.95;
+}
+
+.share-wa__body {
+  padding-top: 48px;
+}
+
+.share-wa__grid {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.share-wa-card {
+  padding: 32px;
+  border: 1px solid var(--brand-line);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 18px 50px rgba(32, 32, 32, 0.05);
+}
+
+.share-wa-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.share-wa-card h2 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 27px;
+  font-weight: 500;
+}
+
+.share-wa-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #f6eee3;
+  color: var(--brand-gold-deep);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.share-wa-card__hint {
+  margin: 0 0 24px;
+  color: #8a8075;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.share-wa-label {
+  display: block;
+  margin: 0 0 9px;
+  color: var(--brand-gold-deep);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.share-wa-textarea {
+  display: block;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--brand-line);
+  border-radius: 10px;
+  background: #fffdfa;
+  color: var(--brand-ink);
+  font: 13px/1.8 var(--font-sans);
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.share-wa-textarea:focus {
+  border-color: var(--brand-gold);
+  box-shadow: 0 0 0 3px rgba(173, 142, 112, 0.14);
+}
+
+.share-wa-textarea--names {
+  min-height: 150px;
+}
+
+.share-wa-textarea--message {
+  min-height: 210px;
+}
+
+.share-wa-count {
+  margin: 9px 0 0;
+  color: #8a8075;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.share-wa-count code {
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: #f6eee3;
+  color: var(--brand-gold-deep);
+  font-size: 11px;
+}
+
+.share-wa-divider {
+  height: 1px;
+  margin: 26px 0;
+  background: var(--brand-line);
+}
+
+.share-wa-templates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.share-wa-chip {
+  padding: 9px 14px;
+  border: 1px solid var(--brand-line);
+  border-radius: 999px;
+  background: #fff;
+  color: #5f574e;
+  font: 500 10px/1 var(--font-sans);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.share-wa-chip:hover {
+  border-color: var(--brand-gold);
+  color: var(--brand-gold-deep);
+}
+
+.share-wa-chip.is-active {
+  border-color: var(--brand-gold);
+  background: var(--brand-gold);
+  color: #fff;
+}
+
+.share-wa-preview {
+  min-height: 300px;
+  margin: 0 0 24px;
+  padding: 20px 22px;
+  border-radius: 10px;
+  background: #fbf5ec;
+  color: #4a423a;
+  font: 13px/1.9 var(--font-sans);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.share-wa-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.share-wa-actions .site-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.share-wa-footnote {
+  margin: 18px 0 0;
+  color: #8a8075;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+@media (max-width: 900px) {
+  .share-wa__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .share-wa__hero {
+    padding: 70px 0 48px;
+  }
+
+  .share-wa-card {
+    padding: 24px;
+  }
+
+  .share-wa-preview {
+    min-height: 220px;
+  }
+}

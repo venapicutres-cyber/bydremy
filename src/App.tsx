@@ -7,6 +7,7 @@ import { CustomSiteLayout } from './layouts/CustomSiteLayout';
 import { CatalogPage } from './pages/CatalogPage';
 import { TemplateDetailPage } from './pages/TemplateDetailPage';
 import { AboutPage } from './pages/AboutPage';
+import { ShareWaPage } from './pages/ShareWaPage';
 import { NotFoundPage } from './components/site/NotFoundPage';
 import { AdminApp } from './admin/AdminApp';
 import { useDatabase } from './services/store';
@@ -62,6 +63,7 @@ export function App() {
           <Route path="/katalog/:category" element={<CatalogPage />} />
           <Route path="/template/:slug" element={<TemplateDetailPage />} />
           <Route path="/tentang" element={<AboutPage />} />
+          <Route path="/share-wa" element={<ShareWaPage />} />
         </Route>
 
         <Route path="/*" element={<CloneRoutes />} />
