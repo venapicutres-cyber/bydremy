@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowUpRight, Eye, MessageSquareHeart, Save } from 'lucide-react';
 import type { PageRecord } from '../../data/types';
+import { useAdminSession } from '../auth';
 import { usePageHtml } from '../../hooks/usePageHtml';
 import { updatePage, useDatabase } from '../../services/store';
 import { saveInvitationPage } from '../../services/supabase';
@@ -24,6 +25,7 @@ interface InvitationDraft {
 export function InvitationEditorPage() {
   const { id } = useParams();
   const db = useDatabase();
+  const session = useAdminSession();
   const page = db.pages.find((item) => item.id === Number(id));
   const invitation = page && isInvitation(page) ? page : undefined;
   const { html, error } = usePageHtml(invitation);
@@ -67,22 +69,27 @@ export function InvitationEditorPage() {
     const title = draft.title.trim() || label;
     const slug = slugify(draft.slug || label) || invitation.slug;
     const route = invitationRoute(slug);
-    try {
-      await saveInvitationPage(invitation.id, {
-        label,
-        title,
-        description: draft.description,
-        slug,
-        route,
-        status: draft.status,
-        hidden_section_ids: hidden,
-        text_overrides: overrides,
-        image_overrides: imageOverrides,
-        link_overrides: linkOverrides,
-      });
-    } catch (error) {
-      window.alert(error instanceof Error ? error.message : 'Gagal menyimpan perubahan undangan.');
-      return;
+    // Admin menyimpan lewat snapshot penuh pada updatePage di bawah. RPC
+    // khusus editor belum terpasang di proyek hosted, jadi jangan dipanggil
+    // saat yang login adalah admin.
+    if (session?.role !== 'admin') {
+      try {
+        await saveInvitationPage(invitation.id, {
+          label,
+          title,
+          description: draft.description,
+          slug,
+          route,
+          status: draft.status,
+          hidden_section_ids: hidden,
+          text_overrides: overrides,
+          image_overrides: imageOverrides,
+          link_overrides: linkOverrides,
+        });
+      } catch (error) {
+        window.alert(error instanceof Error ? error.message : 'Gagal menyimpan perubahan undangan.');
+        return;
+      }
     }
     updatePage(invitation.id, {
       label,
