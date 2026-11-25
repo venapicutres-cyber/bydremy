@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tasha & Ali · Wedding Invitation</title>
+  <style>
+    :root {
+      --accent: #C4A15E;
+      --deep: #1B1B1B;
+      --paper: #F7F4ED;
+      --ink: #2A2521;
+      --muted: #756D64;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Georgia, 'Times New Roman', serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .elementor { overflow: hidden; }
+    .e-con { position: relative; }
+    .elementor-widget-container { width: 100%; }
+    .elementor-heading-title { margin: 0; font-weight: 400; }
+
+    .cover {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 120px 24px 96px;
+      text-align: center;
+      color: #fffaf2;
+      background-image:
+        linear-gradient(180deg, rgba(18, 15, 13, 0.62) 0%, rgba(18, 15, 13, 0.18) 42%, rgba(18, 15, 13, 0.78) 100%),
+        url('/wp-content/uploads/2026/09/7.-Tasha-Ali.webp');
+      background-size: cover;
+      background-position: center;
+    }
+    .cover::after {
+      content: '';
+      position: absolute;
+      inset: 18px;
+      border: 1px solid rgba(255, 250, 242, 0.28);
+      pointer-events: none;
+    }
+    .cover__inner { position: relative; z-index: 1; max-width: 900px; }
+    .cover__eyebrow {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: #f0dfc5;
+    }
+    .cover__names {
+      margin: 26px 0 10px;
+      font-size: clamp(54px, 11vw, 132px);
+      line-height: 0.92;
+      letter-spacing: -0.045em;
+      text-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
+    }
+    .cover__amp {
+      display: block;
+      margin: 12px 0;
+      font-size: 0.42em;
+      font-style: italic;
+      letter-spacing: 0;
+      color: #e9d2ad;
+    }
+    .cover__date {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: clamp(11px, 1.6vw, 15px);
+      letter-spacing: 0.3em;
+    }
+    .cover__button {
+      display: inline-block;
+      margin-top: 42px;
+      padding: 15px 30px;
+      border: 1px solid rgba(255, 250, 242, 0.7);
+      border-radius: 999px;
+      color: #fffaf2;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.26em;
+      text-decoration: none;
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+    .cover__button:hover { background: #fffaf2; color: var(--deep); }
+
+    .section { padding: clamp(72px, 10vw, 130px) clamp(22px, 6vw, 80px); }
+    .section--invite { text-align: center; background: var(--paper); }
+    .section--couple { background: #fffdf8; }
+    .section--event { background: var(--deep); color: #fff8ec; text-align: center; }
+    .section--rsvp { text-align: center; }
+
+    .eyebrow {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .section--event .eyebrow { color: #e4c994; }
+    .title {
+      margin: 18px auto 0;
+      font-size: clamp(32px, 5vw, 58px);
+      line-height: 1.12;
+      letter-spacing: -0.025em;
+    }
+    .body-copy {
+      max-width: 620px;
+      margin: 24px auto 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.85;
+    }
+    .section--event .body-copy { color: rgba(255, 248, 236, 0.7); }
+    .rule {
+      width: 62px;
+      height: 1px;
+      margin: 26px auto 0;
+      background: var(--accent);
+    }
+
+    .couple__grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(34px, 7vw, 90px);
+      max-width: 980px;
+      margin: 54px auto 0;
+      align-items: center;
+    }
+    .couple__card { text-align: center; }
+    .couple__portrait {
+      width: min(100%, 330px);
+      aspect-ratio: 1;
+      margin: 0 auto 26px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 24px 60px rgba(38, 31, 24, 0.16);
+      border: 8px solid #fff;
+    }
+    .couple__name { font-size: clamp(28px, 4vw, 46px); letter-spacing: -0.02em; }
+    .couple__role {
+      display: block;
+      margin-top: 10px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .couple__quote {
+      grid-column: 1 / -1;
+      max-width: 720px;
+      margin: 10px auto 0;
+      text-align: center;
+      font-size: clamp(20px, 3vw, 30px);
+      font-style: italic;
+      line-height: 1.5;
+      color: var(--deep);
+    }
+
+    .event__grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      max-width: 820px;
+      margin: 50px auto 0;
+    }
+    .event__card {
+      padding: 36px 24px;
+      border: 1px solid rgba(255, 248, 236, 0.2);
+      border-radius: 4px;
+    }
+    .event__card h3 { margin: 0 0 14px; font-size: 26px; font-weight: 400; }
+    .event__card p { margin: 6px 0; color: rgba(255, 248, 236, 0.72); font-size: 15px; }
+    .event__date {
+      margin-top: 34px !important;
+      color: #e4c994 !important;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11px !important;
+      letter-spacing: 0.28em;
+    }
+    .event__venue {
+      margin-top: 8px !important;
+      color: rgba(255, 248, 236, 0.56) !important;
+      font-size: 13px !important;
+    }
+
+    .rsvp__button {
+      display: inline-block;
+      margin-top: 34px;
+      padding: 17px 36px;
+      border-radius: 999px;
+      background: var(--deep);
+      color: #fffaf2;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-decoration: none;
+    }
+    .footer {
+      padding: 26px 20px;
+      text-align: center;
+      background: var(--deep);
+      color: rgba(255, 248, 236, 0.55);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 680px) {
+      .cover { padding: 96px 20px 72px; }
+      .cover__names { font-size: clamp(46px, 16vw, 78px); }
+      .couple__grid, .event__grid { grid-template-columns: 1fr; }
+      .couple__portrait { width: min(78%, 280px); }
+      .section { padding: 74px 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="elementor elementor-326107">
+    <section class="elementor-section e-con cover" id="header" data-id="tasha-ali-cover" data-element_type="container">
+      <div class="cover__inner">
+        <div class="elementor-widget elementor-widget-heading" data-id="tasha-ali-cover-eyebrow" data-widget_type="heading.default">
+          <div class="elementor-widget-container">
+            <p class="elementor-heading-title elementor-size-default cover__eyebrow">THE WEDDING OF</p>
+          </div>
+        </div>
+        <div class="elementor-widget elementor-widget-heading" data-id="tasha-ali-cover-title" data-widget_type="heading.default">
+          <div class="elementor-widget-container">
+            <h1 class="elementor-heading-title elementor-size-default cover__names">Tasha<span class="cover__amp">&amp;</span>Ali</h1>
+          </div>
+        </div>
+        <div class="elementor-widget elementor-widget-heading" data-id="tasha-ali-cover-date" data-widget_type="heading.default">
+          <div class="elementor-widget-container">
+            <p class="elementor-heading-title elementor-size-default cover__date">SABTU, 3 OKTOBER 2026</p>
+          </div>
+        </div>
+        <a class="elementor-button cover__button" href="#undangan" role="button">
+          <span class="elementor-button-content-wrapper"><span class="elementor-button-text">BUKA UNDANGAN</span></span>
+        </a>
+      </div>
+    </section>
+
+    <section class="elementor-section e-con section section--invite" id="undangan" data-id="tasha-ali-invite" data-element_type="container">
+      <div class="elementor-widget elementor-widget-heading" data-id="tasha-ali-invite-eyebrow" data-widget_type="heading.default">
+        <div class="elementor-widget-container"><p class="elementor-heading-title elementor-size-default eyebrow">Kepada Yth. Tamu Undangan</p></div>
+      </div>
+      <div class="elementor-widget elementor-widget-heading" data-id="tasha-ali-invite-title" data-widget_type="heading.default">
+        <div class="elementor-widget-container"><h2 class="elementor-heading-title elementor-size-default title">Kami Mengundang Anda</h2></div>
+      </div>
+      <div class="rule"></div>
+      <div class="elementor-widget elementor-widget-text-editor" data-id="tasha-ali-invite-copy" data-widget_type="text-editor.default">
+        <div class="elementor-widget-container">
+          <p class="body-copy">Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di hari bahagia kami. Kehadiran dan doa restu Anda menjadi hadiah yang paling berarti.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="elementor-section e-con section section--couple" id="couple" data-id="tasha-ali-couple" data-element_type="container">
+      <div style="text-align:center">
+        <div class="elementor-widget elementor-widget-heading" data-id="tasha-ali-couple-eyebrow" data-widget_type="heading.default">
+          <div class="elementor-widget-container"><p class="elementor-heading-title elementor-size-default eyebrow">Bride &amp; Groom</p></div>
+        </div>
+        <div class="elementor-widget elementor-widget-heading" data-id="tasha-ali-couple-title" data-widget_type="heading.default">
+          <div class="elementor-widget-container"><h2 class="elementor-heading-title elementor-size-default title">Sekilas Kami</h2></div>
+        </div>
+      </div>
+      <div class="couple__grid">
+        <div class="couple__card">
+          <img class="couple__portrait" src="/wp-content/uploads/2026/09/7.-Tasha-Ali.webp" alt="Tasha" />
+          <div class="elementor-widget elementor-widget-heading" data-id="tasha-ali-bride" data-widget_type="heading.default">
+            <div class="elementor-widget-container"><h3 class="elementor-heading-title elementor-size-default couple__name">Tasha<span class="couple__role">Bride</span></h3></div>
+          </div>
+        </div>
+        <div class="couple__card">
+          <img class="couple__portrait" src="/wp-content/uploads/2026/09/7.-Tasha-Ali.webp" alt="Ali" />
+          <div class="elementor-widget elementor-widget-heading" data-id="tasha-ali-groom" data-widget_type="heading.default">
+            <div class="elementor-widget-container"><h3 class="elementor-heading-title elementor-size-default couple__name">Ali<span class="couple__role">Groom</span></h3></div>
+          </div>
+        </div>
+        <div class="elementor-widget elementor-widget-heading" data-id="tasha-ali-quote" data-widget_type="heading.default">
+          <div class="elementor-widget-container"><p class="elementor-heading-title elementor-size-default couple__quote">“Malam ini bukan tentang menjadi siapa-siapa. Hanya tentang menjadi milik satu sama lain.”</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="elementor-section e-con section section--event" id="event" data-id="tasha-ali-event" data-element_type="container">
+      <div class="elementor-widget elementor-widget-heading" data-id="tasha-ali-event-eyebrow" data-widget_type="heading.default">
+        <div class="elementor-widget-container"><p class="elementor-heading-title elementor-size-default eyebrow">Date &amp; Place</p></div>
+      </div>
+      <div class="elementor-widget elementor-widget-heading" data-id="tasha-ali-event-title" data-widget_type="heading.default">
+        <div class="elementor-widget-container"><h2 class="elementor-heading-title elementor-size-default title">Acara Pernikahan</h2></div>
+      </div>
+      <div class="event__grid">
+        <div class="event__card">
+          <h3>Akad Nikah</h3>
+          <p>08.00 — 10.00 WIB</p>
+          <p class="event__date">SABTU, 3 OKTOBER 2026</p>
+          <p class="event__venue">Surabaya, Jawa Timur</p>
+        </div>
+        <div class="event__card">
+          <h3>Resepsi</h3>
+          <p>11.00 — 14.00 WIB</p>
+          <p class="event__date">SABTU, 3 OKTOBER 2026</p>
+          <p class="event__venue">Surabaya, Jawa Timur</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="elementor-section e-con section section--rsvp" id="rsvp" data-id="tasha-ali-rsvp" data-element_type="container">
+      <div class="elementor-widget elementor-widget-heading" data-id="tasha-ali-rsvp-eyebrow" data-widget_type="heading.default">
+        <div class="elementor-widget-container"><p class="elementor-heading-title elementor-size-default eyebrow">RSVP</p></div>
+      </div>
+      <div class="elementor-widget elementor-widget-heading" data-id="tasha-ali-rsvp-title" data-widget_type="heading.default">
+        <div class="elementor-widget-container"><h2 class="elementor-heading-title elementor-size-default title">Sampai Bertemu di Hari Itu</h2></div>
+      </div>
+      <div class="elementor-widget elementor-widget-text-editor" data-id="tasha-ali-rsvp-copy" data-widget_type="text-editor.default">
+        <div class="elementor-widget-container">
+          <p class="body-copy">Mohon konfirmasi kehadiran Anda sebelum tanggal acara. Kami sangat menantikan kehadiran Anda.</p>
+        </div>
+      </div>
+      <div class="elementor-widget elementor-widget-button" data-id="tasha-ali-rsvp-button" data-widget_type="button.default">
+        <div class="elementor-widget-container">
+          <a class="elementor-button rsvp__button" href="https://api.whatsapp.com/send?phone=62895406181407&#038;text=Halo%20bydreamy%2C%20saya%20tertarik%20dengan%20desain%20Tasha%20%26%20Ali." target="_blank" rel="nofollow" role="button">
+            <span class="elementor-button-content-wrapper"><span class="elementor-button-text">KONFIRMASI KEHADIRAN</span></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">Undangan Digital oleh bydreamy</footer>
+  </div>
+</body>
+</html>
