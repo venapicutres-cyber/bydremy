@@ -14,8 +14,7 @@ export function isCustomSitePath(pathname: string) {
     path.startsWith('/katalog/') ||
     path.startsWith('/template/') ||
     path === '/tentang' ||
-    path === '/share-wa' ||
-    path === '/digital-guestbook'
+    path === '/share-wa'
   );
 }
 
