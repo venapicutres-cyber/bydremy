@@ -24,7 +24,8 @@ export interface LoginResult {
 function sessionFromUser(user: User): AdminSession {
   const meta = (user.user_metadata || {}) as Record<string, unknown>;
   const appMeta = (user.app_metadata || {}) as Record<string, unknown>;
-  const role = appMeta.role === 'admin' ? 'admin' : 'editor';
+  const role =
+    appMeta.role === 'admin' ? 'admin' : appMeta.role === 'viewer' ? 'viewer' : 'editor';
   const name = typeof meta.full_name === 'string' && meta.full_name.trim() ? meta.full_name : 'Admin bydreamy';
   const pageId = Number(appMeta.page_id);
   return {

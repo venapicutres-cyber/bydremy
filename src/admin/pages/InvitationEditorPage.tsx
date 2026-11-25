@@ -27,7 +27,10 @@ export function InvitationEditorPage() {
   const db = useDatabase();
   const session = useAdminSession();
   const page = db.pages.find((item) => item.id === Number(id));
-  const invitation = page && isInvitation(page) ? page : undefined;
+  // Editor hanya boleh mengelola undangan yang tercatat di akunnya. RPC juga
+  // memaksa aturan ini di server; pemeriksaan ini merapikan tampilannya.
+  const assignedToEditor = session?.role !== 'editor' || !session.pageId || page?.id === session.pageId;
+  const invitation = page && isInvitation(page) && assignedToEditor ? page : undefined;
   const { html, error } = usePageHtml(invitation);
 
   const [draft, setDraft] = useState<InvitationDraft | null>(null);
@@ -69,9 +72,8 @@ export function InvitationEditorPage() {
     const title = draft.title.trim() || label;
     const slug = slugify(draft.slug || label) || invitation.slug;
     const route = invitationRoute(slug);
-    // Admin menyimpan lewat snapshot penuh pada updatePage di bawah. RPC
-    // khusus editor belum terpasang di proyek hosted, jadi jangan dipanggil
-    // saat yang login adalah admin.
+    // Admin menyimpan lewat snapshot penuh pada updatePage di bawah. Editor
+    // memakai RPC satu halaman supaya tidak menimpa seluruh data situs.
     if (session?.role !== 'admin') {
       try {
         await saveInvitationPage(invitation.id, {
