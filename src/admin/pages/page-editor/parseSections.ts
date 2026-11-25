@@ -27,6 +27,12 @@ const EDITABLE_TEXT_TARGETS = [
   { selector: '.elementor-accordion-title', tag: 'span', label: 'Judul akordeon' },
   { selector: '.elementor-tab-title', tag: 'span', label: 'Judul tab' },
   { selector: '.elementor-tab-content > p, .elementor-tab-content li', tag: 'p', label: 'Isi tab' },
+  { selector: '.pp-timeline-card-title', tag: 'span', label: 'Judul cerita' },
+  {
+    selector: '.pp-timeline-card-content > p, .pp-timeline-card-content > ul > li, .pp-timeline-card-content > ol > li',
+    tag: 'p',
+    label: 'Isi cerita',
+  },
   { selector: '.elementor-price-list-title', tag: 'span', label: 'Nama item' },
   { selector: '.elementor-price-list-price', tag: 'span', label: 'Harga' },
   { selector: '.elementor-price-list-description', tag: 'p', label: 'Deskripsi item' },
