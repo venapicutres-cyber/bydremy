@@ -23,6 +23,7 @@ import { InvitationsPage } from './pages/InvitationsPage';
 import { InvitationCreatePage } from './pages/InvitationCreatePage';
 import { InvitationEditorPage } from './pages/InvitationEditorPage';
 import { GuestbookPage } from './pages/GuestbookPage';
+import { CheckInPage } from './pages/CheckInPage';
 
 export function AdminApp() {
   const [session, setSession] = useState<AdminSession | null>(null);
@@ -88,7 +89,7 @@ export function AdminApp() {
   }
 
   // Akun editor pengantin hanya boleh membuka undangannya sendiri, buku tamu,
-  // pratinjau, dan ganti password.
+  // dashboard check-in, pratinjau, dan ganti password.
   if (session.role !== 'admin') {
     return (
       <SessionContext.Provider value={session}>
@@ -97,6 +98,7 @@ export function AdminApp() {
           <Route element={<AdminLayout session={session} onLogout={logout} />}>
             <Route path="invitations/:id" element={<InvitationEditorPage />} />
             <Route path="guestbook" element={<GuestbookPage />} />
+            <Route path="check-in" element={<CheckInPage />} />
             <Route path="password" element={<PasswordPage />} />
             <Route
               path="*"
@@ -133,6 +135,7 @@ export function AdminApp() {
           <Route path="invitations/new" element={<InvitationCreatePage />} />
           <Route path="invitations/:id" element={<InvitationEditorPage />} />
           <Route path="guestbook" element={<GuestbookPage />} />
+          <Route path="check-in" element={<CheckInPage />} />
           <Route path="categories" element={<CategoriesPage />} />
           <Route path="media" element={<MediaPage />} />
           <Route path="orders" element={<OrdersPage />} />

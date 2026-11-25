@@ -9,7 +9,14 @@ export function isAdminPath(pathname: string) {
 /** Paths rendered by the React site shell rather than a cloned WordPress page. */
 export function isCustomSitePath(pathname: string) {
   const path = canonicalPath(pathname);
-  return path === '/katalog' || path.startsWith('/katalog/') || path.startsWith('/template/') || path === '/tentang';
+  return (
+    path === '/katalog' ||
+    path.startsWith('/katalog/') ||
+    path.startsWith('/template/') ||
+    path === '/tentang' ||
+    path === '/share-wa' ||
+    path === '/digital-guestbook'
+  );
 }
 
 /**

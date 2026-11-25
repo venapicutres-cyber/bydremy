@@ -13,6 +13,7 @@ import {
   Mail,
   Menu,
   MessageSquareHeart,
+  ScanLine,
   Search,
   Settings,
   ShoppingBag,
@@ -41,6 +42,7 @@ const GROUPS: NavGroup[] = [
       { to: '/admin/pages', label: 'Template Demo', icon: LayoutTemplate },
       { to: '/admin/invitations', label: 'Undangan', icon: Mail },
       { to: '/admin/guestbook', label: 'Buku Tamu', icon: MessageSquareHeart },
+      { to: '/admin/check-in', label: 'Check-In Tamu', icon: ScanLine },
       { to: '/admin/categories', label: 'Kategori', icon: FolderTree },
       { to: '/admin/media', label: 'Media & Font', icon: ImageIcon },
     ],
@@ -86,7 +88,10 @@ export function AdminLayout({ session, onLogout }: { session: AdminSession; onLo
         },
         {
           label: 'Tamu',
-          items: [{ to: '/admin/guestbook', label: 'Buku Tamu', icon: MessageSquareHeart }],
+          items: [
+            { to: '/admin/guestbook', label: 'Buku Tamu', icon: MessageSquareHeart },
+            { to: '/admin/check-in', label: 'Check-In Tamu', icon: ScanLine },
+          ],
         },
         {
           label: 'Sistem',

@@ -354,3 +354,80 @@ body.cloned-body {
   line-height: 1.7;
 }
 
+/* QR pribadi tamu, muncul setelah RSVP berhasil dikirim. */
+.bydreamy-checkin-qr {
+  margin: 24px 0;
+  padding: 26px 22px;
+  border: 1px solid rgba(141, 110, 68, 0.32);
+  border-radius: 14px;
+  background: #fffdf9;
+  box-shadow: 0 18px 40px -30px rgba(62, 43, 24, 0.5);
+  color: #26221e;
+  font-family: var(--font-sans);
+  text-align: center;
+}
+
+.bydreamy-checkin-qr__eyebrow {
+  margin: 0 0 8px;
+  color: #8d6e44;
+  font: 500 9px/1.6 var(--font-sans);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+
+.bydreamy-checkin-qr h3 {
+  margin: 0 0 8px;
+  color: #26221e;
+  font: 500 24px/1.2 var(--font-serif);
+}
+
+.bydreamy-checkin-qr p:not(.bydreamy-checkin-qr__eyebrow):not(.bydreamy-checkin-qr__token) {
+  max-width: 420px;
+  margin: 0 auto 18px;
+  color: #5f574e;
+  font: 400 12px/1.8 var(--font-sans);
+}
+
+.bydreamy-checkin-qr img {
+  display: block;
+  width: 166px;
+  height: 166px;
+  margin: 0 auto 14px;
+  padding: 8px;
+  border: 1px solid rgba(32, 32, 32, 0.1);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.bydreamy-checkin-qr__token {
+  margin: 0 0 18px;
+  color: #8d6e44;
+  font: 400 10px/1.6 var(--font-sans);
+  overflow-wrap: anywhere;
+}
+
+.bydreamy-checkin-qr__actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.bydreamy-checkin-qr__actions button {
+  min-height: 38px;
+  padding: 0 16px;
+  border: 1px solid #1c1917;
+  border-radius: 999px;
+  background: #1c1917;
+  color: #fff;
+  cursor: pointer;
+  font: 500 10px/1 var(--font-sans);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.bydreamy-checkin-qr__actions .bydreamy-checkin-qr__copy {
+  background: transparent;
+  color: #1c1917;
+}
+

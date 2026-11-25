@@ -8,6 +8,8 @@ import { CatalogPage } from './pages/CatalogPage';
 import { TemplateDetailPage } from './pages/TemplateDetailPage';
 import { AboutPage } from './pages/AboutPage';
 import { ShareWaPage } from './pages/ShareWaPage';
+import { DigitalGuestbookPage } from './pages/DigitalGuestbookPage';
+import { LayarSapaPage } from './pages/LayarSapaPage';
 import { NotFoundPage } from './components/site/NotFoundPage';
 import { AdminApp } from './admin/AdminApp';
 import { useDatabase } from './services/store';
@@ -64,8 +66,10 @@ export function App() {
           <Route path="/template/:slug" element={<TemplateDetailPage />} />
           <Route path="/tentang" element={<AboutPage />} />
           <Route path="/share-wa" element={<ShareWaPage />} />
+          <Route path="/digital-guestbook" element={<DigitalGuestbookPage />} />
         </Route>
 
+        <Route path="/layar-sapa" element={<LayarSapaPage />} />
         <Route path="/*" element={<CloneRoutes />} />
       </Routes>
     </>

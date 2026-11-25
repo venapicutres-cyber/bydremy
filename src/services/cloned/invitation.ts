@@ -6,6 +6,7 @@ import {
   subscribeGuestbook,
   type GuestbookEntry,
 } from '../guestbook';
+import { checkInQrDataUrl, checkInUrl, downloadDataUrl, safeFileName } from '../../utils/qr';
 import type { ClonedPageContext } from './types';
 
 type OpenMessage = (title: string, message: string) => void;
@@ -18,7 +19,32 @@ interface StoredWish {
 }
 
 const wishesKey = (pageId: number) => `bydreamy.guestbook.${pageId}`;
+const checkinKey = (pageId: number) => `bydreamy.checkin.${pageId}`;
 const MAX_LOCAL = 100;
+
+interface StoredCheckin {
+  token: string;
+  name: string;
+}
+
+/** QR tamu disimpan di perangkatnya sendiri supaya bisa dibuka lagi nanti. */
+function readStoredCheckin(pageId: number): StoredCheckin | null {
+  try {
+    const raw = JSON.parse(window.localStorage.getItem(checkinKey(pageId)) || 'null') as StoredCheckin | null;
+    if (!raw || typeof raw.token !== 'string' || !/^[0-9a-f-]{36}$/i.test(raw.token)) return null;
+    return { token: raw.token.toLowerCase(), name: raw.name || 'Tamu Undangan' };
+  } catch {
+    return null;
+  }
+}
+
+function saveCheckin(pageId: number, token: string, name: string): void {
+  try {
+    window.localStorage.setItem(checkinKey(pageId), JSON.stringify({ token, name }));
+  } catch {
+    /* ignore quota errors */
+  }
+}
 
 /**
  * Ucapan lama (sebelum ada backend) masih tersimpan di localStorage. Dipakai
@@ -124,6 +150,76 @@ function renderWishes(container: HTMLElement, entries: GuestbookEntry[], note?: 
   container.scrollTop = 0;
 }
 
+/** Panel QR pribadi ditambahkan ke undangan setelah RSVP berhasil dikirim. */
+async function renderCheckinPanel(root: HTMLElement, token: string, name: string): Promise<void> {
+  const form = root.querySelector<HTMLFormElement>('form.elementor-form');
+  const host =
+    form?.parentElement ?? root.querySelector<HTMLElement>('#realtime-comments')?.parentElement ?? root;
+
+  let panel = root.querySelector<HTMLElement>('.bydreamy-checkin-qr');
+  if (!panel) {
+    panel = document.createElement('aside');
+    panel.className = 'bydreamy-checkin-qr';
+    host.appendChild(panel);
+  }
+  panel.replaceChildren();
+
+  const eyebrow = document.createElement('p');
+  eyebrow.className = 'bydreamy-checkin-qr__eyebrow';
+  eyebrow.textContent = 'Tiket Check-In Kamu';
+
+  const title = document.createElement('h3');
+  title.textContent = 'Simpan QR pribadi kamu';
+
+  const note = document.createElement('p');
+  note.textContent = `Halo ${name}, tunjukkan QR ini saat check-in di acara. QR hanya berlaku untuk kamu.`;
+
+  const image = document.createElement('img');
+  image.alt = `QR check-in untuk ${name}`;
+
+  const tokenLine = document.createElement('p');
+  tokenLine.className = 'bydreamy-checkin-qr__token';
+  tokenLine.textContent = token;
+
+  const download = document.createElement('button');
+  download.type = 'button';
+  download.className = 'bydreamy-checkin-qr__download';
+  download.textContent = 'Unduh QR';
+  download.addEventListener('click', () => {
+    void checkInQrDataUrl(token)
+      .then((url) => downloadDataUrl(url, `qr-check-in-${safeFileName(name)}.png`))
+      .catch(() => undefined);
+  });
+
+  const copy = document.createElement('button');
+  copy.type = 'button';
+  copy.className = 'bydreamy-checkin-qr__copy';
+  copy.textContent = 'Salin Tautan';
+  copy.addEventListener('click', () => {
+    if (!navigator.clipboard) {
+      tokenLine.textContent = checkInUrl(token);
+      return;
+    }
+    void navigator.clipboard
+      .writeText(checkInUrl(token))
+      .catch(() => {
+        tokenLine.textContent = checkInUrl(token);
+      });
+  });
+
+  const actions = document.createElement('div');
+  actions.className = 'bydreamy-checkin-qr__actions';
+  actions.append(download, copy);
+
+  panel.append(eyebrow, title, note, image, tokenLine, actions);
+
+  try {
+    image.src = await checkInQrDataUrl(token, 400);
+  } catch {
+    image.remove();
+  }
+}
+
 function showSuccess(root: HTMLElement, openMessage: OpenMessage, name: string) {
   const success = root.querySelector<HTMLElement>('.custom-sucess-message');
   if (success) {
@@ -206,6 +302,11 @@ export function initInvitation({ page, root, cleanups }: ClonedPageContext, open
           );
         });
     }
+  }
+
+  const savedCheckin = hasGuestbookBackend ? readStoredCheckin(page.id) : null;
+  if (savedCheckin) {
+    void renderCheckinPanel(root, savedCheckin.token, savedCheckin.name);
   }
 
   const forms = Array.from(root.querySelectorAll<HTMLFormElement>('form.elementor-form'));
@@ -293,6 +394,10 @@ export function initInvitation({ page, root, cleanups }: ClonedPageContext, open
       });
       entries = mergeGuestbookEntry(entries, entry);
       if (comments) renderWishes(comments, entries);
+      if (entry.checkinToken) {
+        saveCheckin(page.id, entry.checkinToken, name);
+        void renderCheckinPanel(root, entry.checkinToken, name);
+      }
       form.reset();
       showSuccess(root, openMessage, name);
     } catch (error) {
