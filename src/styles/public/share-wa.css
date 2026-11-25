@@ -177,7 +177,7 @@
 .share-wa-chip.is-active {
   border-color: var(--brand-gold);
   background: var(--brand-gold);
-  color: #fff;
+  color: #1c1917;
 }
 
 .share-wa-preview {
