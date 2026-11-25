@@ -426,15 +426,9 @@
   gap: 2px;
   padding: 3px;
   border-radius: 7px;
-  background: rgba(255, 255, 255, 0.94);
-  opacity: 1;
-  transition: background 0.15s ease, box-shadow 0.15s ease;
-}
-
-.adm-media:hover .adm-media__actions,
-.adm-media__actions:focus-within {
   background: #fff;
   box-shadow: 0 2px 10px rgba(31, 29, 26, 0.14);
+  opacity: 1;
 }
 
 .adm-media__actions button {
