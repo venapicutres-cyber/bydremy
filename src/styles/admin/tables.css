@@ -255,6 +255,23 @@
   text-align: center;
 }
 
+.adm-price-input {
+  width: 130px;
+  text-align: right;
+}
+
+.adm-price-preview {
+  white-space: nowrap;
+  color: var(--adm-gold-deep);
+  font-weight: 600;
+}
+
+.adm-price-summary {
+  margin: 0;
+  color: var(--adm-muted);
+  font-size: 11px;
+}
+
 .adm-check-col {
   width: 34px;
   text-align: center;

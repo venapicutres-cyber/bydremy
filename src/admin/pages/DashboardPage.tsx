@@ -238,6 +238,11 @@ export function DashboardPage() {
               <span>Atur kategori</span>
               <ArrowUpRight size={14} />
             </Link>
+            <Link to="/admin/prices">
+              <CircleDollarSign size={18} />
+              <span>Kelola harga</span>
+              <ArrowUpRight size={14} />
+            </Link>
             <Link to="/admin/customers">
               <Users size={18} />
               <span>Data pelanggan</span>

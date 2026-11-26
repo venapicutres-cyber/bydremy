@@ -6,6 +6,19 @@ project_id = "bydreamy"
 # Hanya properti yang dideklarasikan di sini yang didorong ke proyek terhubung.
 [auth]
 enable_signup = false
+site_url = "https://bydreamy.netlify.app"
+additional_redirect_urls = [
+  "https://bydreamy.netlify.app",
+  "https://bydreamy.netlify.app/admin/activate",
+  "http://localhost:3000",
+  "http://localhost:3000/admin/activate",
+]
 
 [auth.email]
 enable_signup = true
+
+[functions.create-checkout-order]
+verify_jwt = false
+
+[functions.review-payment-proof]
+verify_jwt = true

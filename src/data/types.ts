@@ -66,6 +66,13 @@ export interface OrderRecord {
   paidAt?: string;
   date: string;
   notes?: string;
+  /** Field checkout transfer manual; diisi oleh pesanan dari halaman checkout. */
+  checkoutToken?: string;
+  paymentStatus?: 'unpaid' | 'pending' | 'settlement' | 'failed' | 'expired';
+  proofPath?: string;
+  proofUploadedAt?: string;
+  invitationId?: number | null;
+  activatedAt?: string;
 }
 
 export interface CustomerRecord {
@@ -94,6 +101,10 @@ export interface SettingsRecord {
   instagram: string;
   email: string;
   address: string;
+  /** Rekening tujuan transfer manual, diisi lewat Pengaturan admin. */
+  bankName: string;
+  bankAccountNumber: string;
+  bankAccountHolder: string;
   announcement: string;
   announcementEnabled: boolean;
   seoTitle: string;

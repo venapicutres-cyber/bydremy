@@ -181,6 +181,17 @@
   color: var(--adm-green);
 }
 
+.adm-notice {
+  margin-bottom: 16px;
+  padding: 11px 14px;
+  border-left: 3px solid currentColor;
+  background: rgba(0, 0, 0, .04);
+  font-size: 12px;
+}
+
+.adm-notice--ok { color: var(--adm-green); }
+.adm-notice--error { color: var(--adm-red); }
+
 .adm-danger {
   display: flex;
   align-items: center;

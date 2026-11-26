@@ -127,6 +127,12 @@ function orderFromRow(row: Row): OrderRecord {
   const paid = optNum(row.paid);
   if (paid !== undefined) record.paid = paid;
   if (row.paid_at != null) record.paidAt = str(row.paid_at);
+  if (row.checkout_token != null) record.checkoutToken = str(row.checkout_token);
+  if (row.payment_status != null) record.paymentStatus = str(row.payment_status) as OrderRecord['paymentStatus'];
+  if (row.proof_path != null) record.proofPath = str(row.proof_path);
+  if (row.proof_uploaded_at != null) record.proofUploadedAt = str(row.proof_uploaded_at);
+  if (row.invitation_id != null) record.invitationId = optNum(row.invitation_id) ?? null;
+  if (row.activated_at != null) record.activatedAt = str(row.activated_at);
   return record;
 }
 
@@ -161,6 +167,9 @@ function settingsFromRow(row: Row): SettingsRecord {
     instagram: str(row.instagram),
     email: str(row.email),
     address: str(row.address),
+    bankName: str(row.bank_name),
+    bankAccountNumber: str(row.bank_account_number),
+    bankAccountHolder: str(row.bank_account_holder),
     announcement: str(row.announcement),
     announcementEnabled: Boolean(row.announcement_enabled),
     seoTitle: str(row.seo_title),
@@ -277,6 +286,9 @@ export function toSitePayload(db: Database) {
       instagram: db.settings.instagram,
       email: db.settings.email,
       address: db.settings.address,
+      bank_name: db.settings.bankName,
+      bank_account_number: db.settings.bankAccountNumber,
+      bank_account_holder: db.settings.bankAccountHolder,
       announcement: db.settings.announcement,
       announcement_enabled: db.settings.announcementEnabled,
       seo_title: db.settings.seoTitle,

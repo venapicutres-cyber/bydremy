@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowUpRight, Check, ExternalLink, Monitor, Smartphone } from 'lucide-react';
 import { useDatabase } from '../services/store';
+import { rupiah } from '../utils/format';
 import { resolveMediaRef } from '../utils/mediaRef';
 import { TemplateCard } from '../components/site/TemplateCard';
 
@@ -62,6 +63,17 @@ export function TemplateDetailPage() {
               <span>Undangan Pernikahan Digital</span>
             </h1>
             <p>{template.description || category?.description}</p>
+            <div className="template-detail__price">
+              {template.price && template.price > 0 ? (
+                <>
+                  {template.priceCompare && template.priceCompare > template.price && <s>{rupiah(template.priceCompare)}</s>}
+                  <strong>{rupiah(template.price)}</strong>
+                  <span>sudah termasuk editor undangan</span>
+                </>
+              ) : (
+                <strong>Harga belum diisi</strong>
+              )}
+            </div>
             <div className="template-detail__actions">
               {template.status === 'published' ? (
                 <Link className="site-btn site-btn--dark" to={template.route}>
@@ -72,14 +84,9 @@ export function TemplateDetailPage() {
                   Draft — belum dipublikasikan
                 </span>
               )}
-              <a
-                className="site-btn site-btn--ghost"
-                href={`https://api.whatsapp.com/send?phone=${db.settings.whatsapp}&text=Hai%20bydreamy%2C%20saya%20tertarik%20template%20${encodeURIComponent(template.templateName || template.label)}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Pesan Template Ini
-              </a>
+              <Link className="site-btn site-btn--ghost" to={`/checkout/${template.slug}`}>
+                Pilih Template Ini
+              </Link>
             </div>
             <dl className="template-detail__facts">
               <div>

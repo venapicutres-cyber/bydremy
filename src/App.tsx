@@ -9,6 +9,8 @@ import { TemplateDetailPage } from './pages/TemplateDetailPage';
 import { AboutPage } from './pages/AboutPage';
 import { ShareWaPage } from './pages/ShareWaPage';
 import { LayarSapaPage } from './pages/LayarSapaPage';
+import { CheckoutPage } from './pages/CheckoutPage';
+import { CheckoutStatusPage } from './pages/CheckoutStatusPage';
 import { NotFoundPage } from './components/site/NotFoundPage';
 import { AdminApp } from './admin/AdminApp';
 import { useDatabase } from './services/store';
@@ -63,6 +65,8 @@ export function App() {
           <Route path="/katalog" element={<CatalogPage />} />
           <Route path="/katalog/:category" element={<CatalogPage />} />
           <Route path="/template/:slug" element={<TemplateDetailPage />} />
+          <Route path="/checkout/:slug" element={<CheckoutPage />} />
+          <Route path="/checkout/status" element={<CheckoutStatusPage />} />
           <Route path="/tentang" element={<AboutPage />} />
           <Route path="/share-wa" element={<ShareWaPage />} />
         </Route>

@@ -278,6 +278,29 @@
   text-transform: uppercase;
 }
 
+.template-card__meta .template-card__price {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  color: var(--brand-ink);
+  font-size: 12px;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.template-card__price s {
+  color: #a79b8e;
+  font-size: 11px;
+}
+
+.template-card__price strong {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 600;
+}
+
 .template-card__arrow {
   display: flex;
   align-items: center;

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import type { AdminSession } from './auth';
 import { getSession, SessionContext, subscribeAuth } from './auth';
 import { hydrateAdminData, hydrateFromSupabase } from '../services/store/persistence';
@@ -12,6 +12,8 @@ import { PageEditorPage } from './pages/PageEditorPage';
 import { CategoriesPage } from './pages/CategoriesPage';
 import { MediaPage } from './pages/MediaPage';
 import { OrdersPage } from './pages/OrdersPage';
+import { PaymentsPage } from './pages/PaymentsPage';
+import { PricesPage } from './pages/PricesPage';
 import { CustomersPage } from './pages/CustomersPage';
 import { UsersPage } from './pages/UsersPage';
 import { PasswordPage } from './pages/PasswordPage';
@@ -24,8 +26,10 @@ import { InvitationCreatePage } from './pages/InvitationCreatePage';
 import { InvitationEditorPage } from './pages/InvitationEditorPage';
 import { GuestbookPage } from './pages/GuestbookPage';
 import { CheckInPage } from './pages/CheckInPage';
+import { ActivateAccountPage } from './pages/ActivateAccountPage';
 
 export function AdminApp() {
+  const location = useLocation();
   const [session, setSession] = useState<AdminSession | null>(null);
   const [booted, setBooted] = useState(false);
   const bootingRef = useRef(true);
@@ -78,6 +82,10 @@ export function AdminApp() {
         <span className="adm-boot__dot" /> Memuat sesi…
       </div>
     );
+  }
+
+  if (location.pathname === '/admin/activate') {
+    return <ActivateAccountPage ready={Boolean(session)} />;
   }
 
   if (!session) {
@@ -139,6 +147,8 @@ export function AdminApp() {
           <Route path="categories" element={<CategoriesPage />} />
           <Route path="media" element={<MediaPage />} />
           <Route path="orders" element={<OrdersPage />} />
+          <Route path="payments" element={<PaymentsPage />} />
+          <Route path="prices" element={<PricesPage />} />
           <Route path="customers" element={<CustomersPage />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="password" element={<PasswordPage />} />

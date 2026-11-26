@@ -61,6 +61,31 @@
   line-height: 1.95;
 }
 
+.template-detail__price {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 24px;
+}
+
+.template-detail__price s {
+  color: #a79b8e;
+  font-size: 13px;
+}
+
+.template-detail__price strong {
+  color: var(--brand-gold-deep);
+  font-family: var(--font-serif);
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.template-detail__price span {
+  color: #8a8075;
+  font-size: 11px;
+}
+
 .template-detail__actions {
   display: flex;
   flex-wrap: wrap;

@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import {
   BarChart3,
   ChevronRight,
+  CircleDollarSign,
   CreditCard,
   FolderTree,
   Home,
@@ -51,6 +52,8 @@ const GROUPS: NavGroup[] = [
     label: 'Bisnis',
     items: [
       { to: '/admin/orders', label: 'Pesanan', icon: ShoppingBag },
+      { to: '/admin/payments', label: 'Pembayaran', icon: CreditCard },
+      { to: '/admin/prices', label: 'Kelola Harga', icon: CircleDollarSign },
       { to: '/admin/customers', label: 'Pelanggan', icon: Users },
     ],
   },

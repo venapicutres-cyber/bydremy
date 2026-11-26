@@ -4,6 +4,7 @@ import { useDatabase, updatePage, updateSettings } from '../../services/store';
 import type { SettingsRecord } from '../../data/types';
 import { PageHeader } from '../ui';
 import { AnnouncementTab } from './settings/AnnouncementTab';
+import { BankTab } from './settings/BankTab';
 import { ContactTab } from './settings/ContactTab';
 import { GeneralTab } from './settings/GeneralTab';
 import { HomepageTab } from './settings/HomepageTab';
@@ -88,6 +89,8 @@ export function SettingsPage({ initialTab = 'general' }: { initialTab?: Settings
           onSave={saveHome}
         />
       )}
+
+      {tab === 'bank' && <BankTab form={form} set={set} />}
 
       {tab === 'contact' && <ContactTab form={form} set={set} />}
 
