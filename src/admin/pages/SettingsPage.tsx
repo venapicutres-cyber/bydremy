@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Save } from 'lucide-react';
 import { useDatabase, updatePage, updateSettings } from '../../services/store';
 import type { SettingsRecord } from '../../data/types';
@@ -10,9 +11,15 @@ import { GeneralTab } from './settings/GeneralTab';
 import { HomepageTab } from './settings/HomepageTab';
 import { SETTINGS_TABS, type HomepageDraft, type SettingsTab } from './settings/types';
 
+const isSettingsTab = (value: string | null): value is SettingsTab =>
+  Boolean(value && SETTINGS_TABS.some((item) => item.id === value));
+
 export function SettingsPage({ initialTab = 'general' }: { initialTab?: SettingsTab }) {
   const db = useDatabase();
-  const [tab, setTab] = useState<SettingsTab>(initialTab);
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const queryTab = params.get('tab');
+  const tab: SettingsTab = isSettingsTab(queryTab) ? queryTab : initialTab;
   const [form, setForm] = useState<SettingsRecord>(db.settings);
   const [saved, setSaved] = useState(false);
 
@@ -71,7 +78,15 @@ export function SettingsPage({ initialTab = 'general' }: { initialTab?: Settings
 
       <div className="adm-tabs adm-tabs--page">
         {SETTINGS_TABS.map((item) => (
-          <button key={item.id} type="button" className={tab === item.id ? 'is-active' : undefined} onClick={() => setTab(item.id)}>
+          <button
+            key={item.id}
+            type="button"
+            className={tab === item.id ? 'is-active' : undefined}
+            onClick={() => {
+              if (item.id === 'homepage') navigate('/admin/homepage');
+              else navigate(item.id === 'general' ? '/admin/settings' : `/admin/settings?tab=${item.id}`);
+            }}
+          >
             {item.label}
           </button>
         ))}

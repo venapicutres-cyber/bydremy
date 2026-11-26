@@ -53,6 +53,10 @@ function errorText(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
+function thankYouText(name: string): string {
+  return `Assalamu'alaikum ${name}, terima kasih sudah hadir di acara kami. Semoga hari ini membawa berkah untuk kita semua. — bydreamy`;
+}
+
 function csvCell(value: string | number): string {
   return `"${String(value).replace(/"/g, '""')}"`;
 }
@@ -80,6 +84,7 @@ function QrThumb({ token, name, size = 88 }: { token: string; name: string; size
 export function CheckInPage() {
   const db = useDatabase();
   const session = useAdminSession();
+  const readOnly = session?.role === 'viewer';
   const [params, setParams] = useSearchParams();
 
   const invitations = useMemo(() => {
@@ -198,9 +203,7 @@ export function CheckInPage() {
     });
     setLastResult(result);
     setThankYouPhone(result.phone || '');
-    setThankYouMessage(
-      `Assalamu'alaikum ${result.name}, terima kasih sudah hadir di acara kami. Semoga hari ini membawa berkah untuk kita semua. — bydreamy`,
-    );
+    setThankYouMessage(thankYouText(result.name));
     setNotice(
       result.alreadyCheckedIn
         ? `${result.name} sudah check-in sebelumnya (${dateTime(result.checkedInAt)}).`
@@ -235,6 +238,7 @@ export function CheckInPage() {
   }, []);
 
   const startScan = async () => {
+    if (readOnly) return;
     setError('');
     setScanError('');
     try {
@@ -267,7 +271,7 @@ export function CheckInPage() {
 
   const submitManual = async (event: FormEvent) => {
     event.preventDefault();
-    if (!pageId || !name.trim()) return;
+    if (readOnly || !pageId || !name.trim()) return;
     setBusy(true);
     setError('');
     try {
@@ -455,11 +459,11 @@ export function CheckInPage() {
             </div>
             <div className="adm-checkin__scan-actions">
               {scanning ? (
-                <button type="button" className="adm-btn adm-btn--ghost" onClick={stopScan}>
+                <button type="button" className="adm-btn adm-btn--ghost" onClick={stopScan} disabled={readOnly}>
                   <XCircle size={15} /> Hentikan Kamera
                 </button>
               ) : (
-                <button type="button" className="adm-btn adm-btn--dark" onClick={() => void startScan()}>
+                <button type="button" className="adm-btn adm-btn--dark" onClick={() => void startScan()} disabled={readOnly}>
                   <Camera size={15} /> Aktifkan Kamera
                 </button>
               )}
@@ -480,9 +484,10 @@ export function CheckInPage() {
                   onChange={(event) => setTokenInput(event.target.value)}
                   placeholder="Tempel URL QR atau kode UUID"
                   autoComplete="off"
+                  disabled={readOnly}
                 />
               </label>
-              <button type="submit" className="adm-btn adm-btn--dark" disabled={busy || !tokenInput.trim()}>
+              <button type="submit" className="adm-btn adm-btn--dark" disabled={readOnly || busy || !tokenInput.trim()}>
                 <CheckCircle2 size={15} /> Check-In
               </button>
             </form>
@@ -492,11 +497,11 @@ export function CheckInPage() {
             <form className="adm-checkin__manual-form" onSubmit={submitManual}>
               <label className="adm-field">
                 <span className="adm-field__label">Nama lengkap tamu</span>
-                <input value={name} onChange={(event) => setName(event.target.value)} placeholder="Nama sesuai undangan" required />
+                <input value={name} onChange={(event) => setName(event.target.value)} placeholder="Nama sesuai undangan" disabled={readOnly} required />
               </label>
               <label className="adm-field">
                 <span className="adm-field__label">Kategori identitas</span>
-                <select value={identity} onChange={(event) => setIdentity(event.target.value)}>
+                <select value={identity} onChange={(event) => setIdentity(event.target.value)} disabled={readOnly}>
                   {IDENTITY_OPTIONS.map((option) => (
                     <option key={option} value={option}>
                       {option}
@@ -506,9 +511,9 @@ export function CheckInPage() {
               </label>
               <label className="adm-field">
                 <span className="adm-field__label">WhatsApp (opsional)</span>
-                <input value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="08xxxxxxxxxx" inputMode="tel" />
+                <input value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="08xxxxxxxxxx" inputMode="tel" disabled={readOnly} />
               </label>
-              <button type="submit" className="adm-btn adm-btn--dark" disabled={busy || !pageId || !name.trim()}>
+              <button type="submit" className="adm-btn adm-btn--dark" disabled={readOnly || busy || !pageId || !name.trim()}>
                 <CheckCircle2 size={15} /> Simpan Check-In
               </button>
             </form>
@@ -521,11 +526,11 @@ export function CheckInPage() {
               <p className="adm-checkin__thanks-name">{lastResult.name}</p>
               <label className="adm-field">
                 <span className="adm-field__label">Nomor WhatsApp</span>
-                <input value={thankYouPhone} onChange={(event) => setThankYouPhone(event.target.value)} placeholder="08xxxxxxxxxx" inputMode="tel" />
+                <input value={thankYouPhone} onChange={(event) => setThankYouPhone(event.target.value)} placeholder="08xxxxxxxxxx" inputMode="tel" disabled={readOnly} />
               </label>
               <label className="adm-field">
                 <span className="adm-field__label">Pesan</span>
-                <textarea rows={4} value={thankYouMessage} onChange={(event) => setThankYouMessage(event.target.value)} />
+                <textarea rows={4} value={thankYouMessage} onChange={(event) => setThankYouMessage(event.target.value)} disabled={readOnly} />
               </label>
               <a
                 className="adm-btn adm-btn--dark"
@@ -634,6 +639,7 @@ export function CheckInPage() {
                                   alreadyCheckedIn: true,
                                 });
                                 setThankYouPhone(checkin.phone);
+                                setThankYouMessage(thankYouText(guest.name));
                               }}
                             >
                               <MessageCircleHeart size={13} /> WA

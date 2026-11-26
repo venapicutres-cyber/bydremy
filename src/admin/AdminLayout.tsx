@@ -19,6 +19,7 @@ import {
   Settings,
   ShoppingBag,
   Sparkles,
+  UserRound,
   Users,
   X,
 } from 'lucide-react';
@@ -30,6 +31,7 @@ import { dismissSyncError, useDatabase, useSyncError } from '../services/store';
 interface NavGroup {
   label: string;
   items: { to: string; label: string; icon: LucideIcon; end?: boolean }[];
+  hint?: string;
 }
 
 const GROUPS: NavGroup[] = [
@@ -54,7 +56,7 @@ const GROUPS: NavGroup[] = [
       { to: '/admin/orders', label: 'Pesanan', icon: ShoppingBag },
       { to: '/admin/payments', label: 'Pembayaran', icon: CreditCard },
       { to: '/admin/prices', label: 'Kelola Harga', icon: CircleDollarSign },
-      { to: '/admin/customers', label: 'Pelanggan', icon: Users },
+      { to: '/admin/customers', label: 'Pelanggan', icon: UserRound },
     ],
   },
   {
@@ -87,7 +89,10 @@ export function AdminLayout({ session, onLogout }: { session: AdminSession; onLo
     ? [
         {
           label: 'Undangan Saya',
-          items: [{ to: `/admin/invitations/${session.pageId ?? ''}`, label: 'Editor Undangan', icon: Mail }],
+          items: session.pageId
+            ? [{ to: `/admin/invitations/${session.pageId}`, label: 'Editor Undangan', icon: Mail }]
+            : [],
+          hint: session.pageId ? undefined : 'Akun belum dihubungkan ke undangan.',
         },
         {
           label: 'Tamu',
@@ -124,6 +129,7 @@ export function AdminLayout({ session, onLogout }: { session: AdminSession; onLo
           {groups.map((group) => (
             <div key={group.label} className="adm-nav__group">
               <p>{group.label}</p>
+              {group.hint && <span className="adm-nav__hint">{group.hint}</span>}
               {group.items.map((item) => {
                 const Icon = item.icon;
                 return (
@@ -147,7 +153,7 @@ export function AdminLayout({ session, onLogout }: { session: AdminSession; onLo
           <div className="adm-sidebar__promo">
             <Sparkles size={18} />
             <strong>{db.pages.filter((page) => page.kind === 'template').length} template aktif</strong>
-            <p>Semua perubahan tersimpan otomatis ke website.</p>
+            <p>{scoped ? 'Perubahan tersimpan pada undangan Anda.' : 'Semua perubahan tersimpan otomatis ke website.'}</p>
             <Link to="/katalog">Lihat katalog →</Link>
           </div>
           <div className="adm-user">
@@ -185,9 +191,15 @@ export function AdminLayout({ session, onLogout }: { session: AdminSession; onLo
               <Mail size={14} /> Lihat Website
             </Link>
             {!scoped && (
-              <Link to="/admin/orders" className="adm-topbar__badge" title="Pesanan menunggu">
+              <Link to="/admin/payments" className="adm-topbar__badge" title="Bukti transfer menunggu ditinjau">
                 <CreditCard size={16} />
-                <span>{db.orders.filter((order) => order.status === 'pending').length}</span>
+                <span>
+                  {
+                    db.orders.filter(
+                      (order) => order.proofPath && order.paymentStatus === 'pending' && !order.activatedAt,
+                    ).length
+                  }
+                </span>
               </Link>
             )}
           </div>

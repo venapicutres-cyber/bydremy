@@ -61,7 +61,7 @@ export function UsersPage() {
         <div className="adm-role-card">
           <UserCog size={20} />
           <h3>Editor</h3>
-          <p>Dapat mengelola konten, template, dan media tanpa mengubah pengguna.</p>
+          <p>Dapat mengelola undangan yang ditugaskan, buku tamu, dan check-in tanpa mengubah pengguna.</p>
           <span>{db.users.filter((user) => user.role === 'editor').length} pengguna</span>
         </div>
         <div className="adm-role-card">

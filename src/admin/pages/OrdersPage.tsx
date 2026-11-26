@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { CircleDollarSign, Clock, MessageCircle, Plus, Printer, Search, Trash2, Wallet } from 'lucide-react';
 import {
   createOrder,
@@ -41,6 +42,17 @@ export function OrdersPage() {
   const [form, setForm] = useState(blank);
   // '' = pelanggan baru (isi manual). Kalau diisi, data pelanggan mengikuti yang dipilih.
   const [customerId, setCustomerId] = useState('');
+  const [params, setParams] = useSearchParams();
+
+  // Tombol "Pesanan Baru" di dashboard mengarah ke sini dengan ?new=1.
+  useEffect(() => {
+    if (params.get('new') !== '1') return;
+    setEditing(null);
+    setForm(blank);
+    setCustomerId('');
+    setOpen(true);
+    setParams({}, { replace: true });
+  }, [params, setParams]);
 
   const orders = useMemo(
     () =>
@@ -95,17 +107,40 @@ export function OrdersPage() {
   };
 
   const submit = () => {
-    if (!form.customerName.trim()) return;
+    const name = form.customerName.trim();
+    if (!name) {
+      window.alert('Nama pelanggan wajib diisi.');
+      return;
+    }
+    const email = normalizeEmail(form.email);
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      window.alert('Format email tidak valid.');
+      return;
+    }
+    const total = Number(form.total);
+    if (!Number.isFinite(total) || total <= 0) {
+      window.alert('Total pesanan harus lebih dari 0.');
+      return;
+    }
+    const paid = form.paid === '' ? undefined : Number(form.paid);
+    if (paid !== undefined && (!Number.isFinite(paid) || paid < 0)) {
+      window.alert('Jumlah pembayaran tidak valid.');
+      return;
+    }
+    if (paid !== undefined && paid > total) {
+      window.alert('Jumlah pembayaran tidak boleh melebihi total pesanan.');
+      return;
+    }
     const payload = {
-      customerName: form.customerName,
-      email: normalizeEmail(form.email),
+      customerName: name,
+      email,
       phone: form.phone,
       templateId: form.templateId ? Number(form.templateId) : null,
       packageName: form.packageName,
       status: form.status,
-      total: Number(form.total) || 0,
+      total,
       // Kosong = ikut status pesanan, supaya data lama tetap terhitung benar.
-      paid: form.paid === '' ? undefined : form.paid,
+      paid,
       paidAt: form.paidAt || undefined,
       date: form.date,
       notes: form.notes,

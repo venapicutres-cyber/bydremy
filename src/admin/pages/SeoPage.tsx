@@ -129,7 +129,7 @@ export function SeoPage() {
                   <td className="adm-muted">{page.description ? `${page.description.slice(0, 90)}…` : '—'}</td>
                   <td><StatusPill status={page.status} /></td>
                   <td className="is-right">
-                    <Link to={`/admin/pages/${page.id}`} className="adm-icon-btn" title="Edit metadata">
+                    <Link to={`/admin/homepage/${page.id}`} className="adm-icon-btn" title="Edit metadata">
                       <ArrowUpRight size={15} />
                     </Link>
                   </td>

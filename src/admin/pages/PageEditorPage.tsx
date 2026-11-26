@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowUpRight, Eye, RefreshCw, Save } from 'lucide-react';
 import { deletePage, useDatabase } from '../../services/store';
 import { usePageHtml } from '../../hooks/usePageHtml';
@@ -23,10 +23,12 @@ export function PageEditorPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const db = useDatabase();
+  const location = useLocation();
   const isNew = !id;
   const page = isNew ? undefined : db.pages.find((item) => item.id === Number(id));
-  const backTo = page?.kind === 'template' ? '/admin/pages' : '/admin/homepage';
-  const backLabel = page?.kind === 'template' ? 'Template Demo' : 'Halaman Website';
+  const isHomepageRoute = location.pathname.startsWith('/admin/homepage');
+  const backTo = isHomepageRoute ? '/admin/homepage' : '/admin/pages';
+  const backLabel = isHomepageRoute ? 'Halaman Website' : 'Template Demo';
   const { html } = usePageHtml(page);
   const editor = usePageEditor({ page, isNew, navigate });
   const [tab, setTab] = useState<EditorTab>('sections');
@@ -56,8 +58,8 @@ export function PageEditorPage() {
       <div className="adm-page">
         <div className="adm-empty">
           <h3>Halaman tidak ditemukan</h3>
-          <Link className="adm-btn adm-btn--dark" to="/admin/pages">
-            Kembali ke Template Demo
+          <Link className="adm-btn adm-btn--dark" to={backTo}>
+            Kembali ke {backLabel}
           </Link>
         </div>
       </div>

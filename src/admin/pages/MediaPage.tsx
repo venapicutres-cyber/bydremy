@@ -81,9 +81,19 @@ export function MediaPage() {
   };
 
   const submit = () => {
-    if (!form.name.trim()) return;
-    if (editing) updateMedia(editing.id, form);
-    else createMedia(form);
+    const name = form.name.trim();
+    const url = form.url.trim();
+    if (!name) {
+      window.alert('Nama media wajib diisi.');
+      return;
+    }
+    if (!url) {
+      window.alert('URL atau tautan media wajib diisi.');
+      return;
+    }
+    const payload = { ...form, name, url };
+    if (editing) updateMedia(editing.id, payload);
+    else createMedia(payload);
     setOpen(false);
   };
 

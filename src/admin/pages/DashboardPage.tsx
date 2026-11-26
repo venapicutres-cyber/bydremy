@@ -34,6 +34,11 @@ export function DashboardPage() {
   const drafts = websitePages.filter((page) => page.status === 'draft').length;
   const revenue = db.orders.reduce((total, order) => total + orderPaid(order), 0);
   const unpaidValue = db.orders.reduce((total, order) => total + orderOutstanding(order), 0);
+  const reviewCount = db.orders.filter(
+    (order) => order.proofPath && order.paymentStatus === 'pending' && !order.activatedAt,
+  ).length;
+  const latestOrderDate = db.orders.reduce((latest, order) => (order.date > latest ? order.date : latest), '');
+  const chartYear = latestOrderDate ? new Date(latestOrderDate).getFullYear() : new Date().getFullYear();
 
   const exportBackup = () => {
     downloadText(backupFilename(), buildBackup(db));
@@ -55,7 +60,10 @@ export function DashboardPage() {
 
   const monthly = MONTHS.map((label, index) => {
     const total = db.orders
-      .filter((order) => new Date(order.date).getMonth() === index)
+      .filter((order) => {
+        const date = new Date(order.date);
+        return date.getMonth() === index && date.getFullYear() === chartYear;
+      })
       .reduce((sum, order) => sum + order.total, 0);
     return { label, total };
   });
@@ -82,7 +90,7 @@ export function DashboardPage() {
             <Link to="/admin/homepage/new" className="adm-btn adm-btn--ghost">
               <FilePenLine size={15} /> Halaman Baru
             </Link>
-            <Link to="/admin/orders" className="adm-btn adm-btn--dark">
+            <Link to="/admin/orders?new=1" className="adm-btn adm-btn--dark">
               <Plus size={15} /> Pesanan Baru
             </Link>
           </>
@@ -106,7 +114,7 @@ export function DashboardPage() {
         <StatCard
           label="Pesanan"
           value={db.orders.length}
-          meta={`${db.orders.filter((order) => order.status === 'pending').length} menunggu konfirmasi`}
+          meta={`${reviewCount} bukti transfer perlu ditinjau`}
           icon={<ShoppingBag size={17} />}
         />
         <StatCard
@@ -122,7 +130,7 @@ export function DashboardPage() {
         <Card
           title="Pesanan per bulan"
           subtitle="Nilai transaksi berdasarkan tanggal pesanan"
-          actions={<span className="adm-chip"><TrendingUp size={13} /> 2026</span>}
+          actions={<span className="adm-chip"><TrendingUp size={13} /> {chartYear}</span>}
         >
           <div className="adm-chart">
             {monthly.map((item) => (
@@ -138,7 +146,7 @@ export function DashboardPage() {
 
         <Card
           title="Distribusi kategori"
-          subtitle="Sebaran 25 desain demo"
+          subtitle={`Sebaran ${templates.length} desain demo`}
           actions={<Link to="/admin/categories" className="adm-link">Kelola <ArrowUpRight size={13} /></Link>}
         >
           <div className="adm-dist">
@@ -299,10 +307,10 @@ export function DashboardPage() {
             Kelola pengguna <ArrowUpRight size={14} />
           </Link>
         </Card>
-        <Card title="Backup data" subtitle="Tersimpan di browser ini saja">
+        <Card title="Backup data" subtitle="Tersinkron ke Supabase">
           <p className="adm-backup__note">
-            Unduh file JSON sebagai cadangan. Data dashboard tidak tersimpan di server, jadi backup ini satu-satunya
-            cara memulihkan pesanan dan pelanggan bila penyimpanan browser dibersihkan.
+            Data admin tersimpan otomatis di Supabase dengan cache di browser. Unduh file JSON sebagai cadangan
+            tambahan bila penyimpanan browser dibersihkan atau akun perlu dipindahkan.
           </p>
           <div className="adm-inline">
             <button type="button" className="adm-btn adm-btn--dark adm-btn--sm" onClick={exportBackup}>

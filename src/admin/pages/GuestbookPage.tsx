@@ -2,10 +2,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Download, MessageSquareHeart, RefreshCw, Search, Trash2, Users } from 'lucide-react';
 import { ConfirmButton, PageHeader } from '../ui';
+import { useAdminSession } from '../auth';
 import { useDatabase } from '../../services/store';
 import {
   deleteGuestbookEntry,
   fetchAllGuestbook,
+  fetchGuestbook,
   hasGuestbookBackend,
   subscribeGuestbook,
   type GuestbookEntry,
@@ -27,13 +29,17 @@ function csvCell(value: string) {
 
 export function GuestbookPage() {
   const db = useDatabase();
+  const session = useAdminSession();
   const [params, setParams] = useSearchParams();
   const [entries, setEntries] = useState<GuestbookEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [attendance, setAttendance] = useState<AttendanceFilter>('all');
-  const pageFilter = params.get('page') || 'all';
+  const isAdmin = session?.role === 'admin';
+  const scopedPageId = session?.pageId ?? null;
+  const canManage = session?.role !== 'viewer';
+  const pageFilter = isAdmin ? params.get('page') || 'all' : String(scopedPageId ?? '');
 
   const load = useCallback(async () => {
     if (!hasGuestbookBackend) {
@@ -44,13 +50,13 @@ export function GuestbookPage() {
     setLoading(true);
     setError(null);
     try {
-      setEntries(await fetchAllGuestbook());
+      setEntries(isAdmin ? await fetchAllGuestbook() : scopedPageId ? await fetchGuestbook(scopedPageId, 1000) : []);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [isAdmin, scopedPageId]);
 
   useEffect(() => {
     void load();
@@ -59,10 +65,11 @@ export function GuestbookPage() {
   // Ucapan baru langsung masuk tanpa perlu refresh.
   useEffect(() => {
     if (!hasGuestbookBackend) return;
-    return subscribeGuestbook(null, (entry) => {
+    const watchPageId = isAdmin ? null : scopedPageId ?? -1;
+    return subscribeGuestbook(watchPageId, (entry) => {
       setEntries((current) => [entry, ...current.filter((item) => item.id !== entry.id)].slice(0, 1000));
     });
-  }, []);
+  }, [isAdmin, scopedPageId]);
 
   const pageOf = useCallback(
     (id: number) => db.pages.find((page) => page.id === id),
@@ -72,10 +79,11 @@ export function GuestbookPage() {
   const pagesWithEntries = useMemo(() => {
     const ids = new Set(entries.map((entry) => entry.pageId));
     return db.pages
+      .filter((page) => isAdmin || page.id === scopedPageId)
       .filter((page) => ids.has(page.id) || isInvitation(page))
       .map((page) => ({ id: String(page.id), label: page.label, route: page.route }))
       .sort((a, b) => a.label.localeCompare(b.label));
-  }, [db.pages, entries]);
+  }, [db.pages, entries, isAdmin, scopedPageId]);
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -190,14 +198,18 @@ export function GuestbookPage() {
               placeholder="Cari nama, ucapan, atau undangan…"
             />
           </div>
-          <select className="adm-select" value={pageFilter} onChange={(event) => setPageFilter(event.target.value)}>
-            <option value="all">Semua undangan</option>
-            {pagesWithEntries.map((page) => (
-              <option key={page.id} value={page.id}>
-                {page.label}
-              </option>
-            ))}
-          </select>
+          {isAdmin ? (
+            <select className="adm-select" value={pageFilter} onChange={(event) => setPageFilter(event.target.value)}>
+              <option value="all">Semua undangan</option>
+              {pagesWithEntries.map((page) => (
+                <option key={page.id} value={page.id}>
+                  {page.label}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <span className="adm-chip">{scopedPageId ? 'Undangan saya' : 'Belum ada undangan'}</span>
+          )}
           <select
             className="adm-select"
             value={attendance}
@@ -276,12 +288,16 @@ export function GuestbookPage() {
                       </td>
                       <td className="adm-muted">{dateTime(entry.createdAt)}</td>
                       <td>
-                        <ConfirmButton
-                          message={`Hapus ucapan dari "${entry.name || 'Tamu Undangan'}"? Tindakan tidak bisa dibatalkan.`}
-                          onConfirm={() => void removeEntry(entry.id)}
-                        >
-                          <Trash2 size={15} /> Hapus
-                        </ConfirmButton>
+                        {canManage ? (
+                          <ConfirmButton
+                            message={`Hapus ucapan dari "${entry.name || 'Tamu Undangan'}"? Tindakan tidak bisa dibatalkan.`}
+                            onConfirm={() => void removeEntry(entry.id)}
+                          >
+                            <Trash2 size={15} /> Hapus
+                          </ConfirmButton>
+                        ) : (
+                          <span className="adm-muted">Lihat saja</span>
+                        )}
                       </td>
                     </tr>
                   );

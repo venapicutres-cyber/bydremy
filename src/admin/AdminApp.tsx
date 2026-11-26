@@ -85,7 +85,7 @@ export function AdminApp() {
   }
 
   if (location.pathname === '/admin/activate') {
-    return <ActivateAccountPage ready={Boolean(session)} />;
+    return session ? <Navigate to="/admin" replace /> : <ActivateAccountPage />;
   }
 
   if (!session) {
@@ -158,6 +158,7 @@ export function AdminApp() {
           <Route path="navigation" element={<NavigationPage />} />
           <Route path="settings" element={<SettingsPage initialTab="general" />} />
           <Route path="seo" element={<SeoPage />} />
+          <Route path="*" element={<Navigate to="/admin" replace />} />
         </Route>
       </Routes>
     </SessionContext.Provider>

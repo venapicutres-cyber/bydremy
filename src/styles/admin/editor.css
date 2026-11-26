@@ -58,6 +58,17 @@
   padding: 20px;
 }
 
+.adm-editor-fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.adm-editor-fieldset > .adm-stack {
+  padding: 20px;
+}
+
 .adm-editor__side {
   display: flex;
   flex-direction: column;

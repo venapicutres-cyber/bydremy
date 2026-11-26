@@ -507,6 +507,7 @@
 
 .adm-pill--draft,
 .adm-pill--pending,
+.adm-pill--menunggu,
 .adm-pill--inactive {
   background: rgba(176, 123, 44, 0.12);
   color: var(--adm-amber);
@@ -518,7 +519,8 @@
   color: #3c6094;
 }
 
-.adm-pill--cancelled {
+.adm-pill--cancelled,
+.adm-pill--absent {
   background: rgba(180, 67, 60, 0.1);
   color: var(--adm-red);
 }

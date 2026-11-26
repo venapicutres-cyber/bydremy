@@ -27,10 +27,14 @@ export function InvitationEditorPage() {
   const db = useDatabase();
   const session = useAdminSession();
   const page = db.pages.find((item) => item.id === Number(id));
-  // Editor hanya boleh mengelola undangan yang tercatat di akunnya. RPC juga
-  // memaksa aturan ini di server; pemeriksaan ini merapikan tampilannya.
-  const assignedToEditor = session?.role !== 'editor' || !session.pageId || page?.id === session.pageId;
-  const invitation = page && isInvitation(page) && assignedToEditor ? page : undefined;
+  // Admin mengelola semua undangan; editor/viewer hanya undangan yang ditugaskan.
+  // RPC juga memaksa aturan ini di server; pemeriksaan ini merapikan tampilannya.
+  const canOpen = session?.role === 'admin' || Boolean(session?.pageId && page?.id === session.pageId);
+  const readOnly = session?.role === 'viewer';
+  const invitation = page && isInvitation(page) && canOpen ? page : undefined;
+  const backTo =
+    session?.role === 'admin' ? '/admin/invitations' : session?.pageId ? `/admin/invitations/${session.pageId}` : '/admin';
+  const backLabel = session?.role === 'admin' ? 'Undangan' : 'Undangan Saya';
   const { html, error } = usePageHtml(invitation);
 
   const [draft, setDraft] = useState<InvitationDraft | null>(null);
@@ -63,7 +67,7 @@ export function InvitationEditorPage() {
     setDraft((current) => (current ? { ...current, [key]: value } : current));
 
   const save = async () => {
-    if (!invitation || !draft) return;
+    if (readOnly || !invitation || !draft) return;
     const label = draft.label.trim();
     if (!label) {
       window.alert('Nama acara wajib diisi.');
@@ -115,8 +119,8 @@ export function InvitationEditorPage() {
       <div className="adm-page">
         <div className="adm-empty">
           <h3>Undangan tidak ditemukan</h3>
-          <Link className="adm-btn adm-btn--dark" to="/admin/invitations">
-            Kembali ke Undangan
+          <Link className="adm-btn adm-btn--dark" to={backTo}>
+            Kembali ke {backLabel}
           </Link>
         </div>
       </div>
@@ -126,8 +130,8 @@ export function InvitationEditorPage() {
   return (
     <div className="adm-page adm-page--editor">
       <div className="adm-editor-head">
-        <Link to="/admin/invitations" className="adm-back">
-          <ArrowLeft size={15} /> Undangan
+        <Link to={backTo} className="adm-back">
+          <ArrowLeft size={15} /> {backLabel}
         </Link>
         <div>
           <p className="adm-eyebrow">{invitation.templateName || 'Undangan'}</p>
@@ -136,6 +140,7 @@ export function InvitationEditorPage() {
             <StatusPill status={draft.status} />
             <code className="adm-code">{invitationRoute(slug || invitation.slug)}</code>
             {saved && <span className="adm-saved">Tersimpan ✓</span>}
+            {readOnly && <span className="adm-note">Mode lihat saja</span>}
           </div>
         </div>
         <div className="adm-editor-head__actions">
@@ -147,7 +152,7 @@ export function InvitationEditorPage() {
               <ArrowUpRight size={15} /> Buka
             </Link>
           )}
-          <button type="button" className="adm-btn adm-btn--dark" onClick={save}>
+          <button type="button" className="adm-btn adm-btn--dark" onClick={save} disabled={readOnly}>
             <Save size={15} /> Simpan Perubahan
           </button>
         </div>
@@ -155,7 +160,8 @@ export function InvitationEditorPage() {
 
       <div className="adm-editor">
         <div className="adm-editor__main">
-          <div className="adm-stack">
+          <fieldset disabled={readOnly} className="adm-editor-fieldset">
+            <div className="adm-stack">
             <Card title="Info undangan" subtitle="Dipakai di daftar pengelola, tautan tamu, dan mesin pencari.">
               <div className="adm-form-grid">
                 <Field label="Nama acara" hint="Contoh: Bagas & Naila">
@@ -209,7 +215,8 @@ export function InvitationEditorPage() {
                 uploadPageId={invitation.id}
               />
             </Card>
-          </div>
+            </div>
+          </fieldset>
         </div>
 
         <aside className="adm-editor__side">
@@ -236,12 +243,13 @@ export function InvitationEditorPage() {
                 className="adm-select"
                 value={draft.status}
                 onChange={(event) => setField('status', event.target.value as PageRecord['status'])}
+                disabled={readOnly}
               >
                 <option value="draft">Draf</option>
                 <option value="published">Terbit</option>
               </select>
             </Field>
-            <button type="button" className="adm-btn adm-btn--dark" onClick={save}>
+            <button type="button" className="adm-btn adm-btn--dark" onClick={save} disabled={readOnly}>
               <Save size={15} /> Simpan Perubahan
             </button>
           </Card>

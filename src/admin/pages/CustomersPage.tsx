@@ -65,9 +65,18 @@ export function CustomersPage() {
   };
 
   const submit = () => {
-    if (!form.name.trim()) return;
+    const name = form.name.trim();
+    if (!name) {
+      window.alert('Nama pelanggan wajib diisi.');
+      return;
+    }
     // Email dinormalkan saat disimpan agar tautan pesanan↔pelanggan tetap cocok.
-    const payload = { ...form, email: normalizeEmail(form.email) };
+    const email = normalizeEmail(form.email);
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      window.alert('Format email tidak valid.');
+      return;
+    }
+    const payload = { ...form, name, email };
     if (editing) updateCustomer(editing.id, payload);
     else createCustomer(payload);
     setOpen(false);
