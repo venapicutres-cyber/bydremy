@@ -1,8 +1,8 @@
-import { useState, type FormEvent } from 'react';
+import { useRef, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Check, Landmark } from 'lucide-react';
 import { useDatabase } from '../services/store';
-import { beginCheckout } from '../services/checkout';
+import { beginCheckout, newCheckoutKey } from '../services/checkout';
 import { rupiah } from '../utils/format';
 import { resolveMediaRef } from '../utils/mediaRef';
 
@@ -14,6 +14,10 @@ export function CheckoutPage() {
   const [form, setForm] = useState({ customerName: '', email: '', phone: '' });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  // Kunci idempotensi dibuat sekali per halaman: klik ganda memakai kunci yang
+  // sama sehingga RPC hanya membuat satu pesanan.
+  const checkoutKeyRef = useRef<string | null>(null);
+  if (!checkoutKeyRef.current) checkoutKeyRef.current = newCheckoutKey();
 
   if (!template) {
     return <div className="site-container site-empty"><h1>Template tidak ditemukan</h1><Link className="site-btn" to="/katalog">Kembali ke katalog</Link></div>;
@@ -27,7 +31,7 @@ export function CheckoutPage() {
     setBusy(true);
     setError(null);
     try {
-      const session = await beginCheckout({ templateId: template.id, ...form });
+      const session = await beginCheckout({ templateId: template.id, ...form }, checkoutKeyRef.current!);
       navigate(`/checkout/status?order=${encodeURIComponent(session.orderId)}&token=${encodeURIComponent(session.token)}`);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Checkout tidak dapat diproses.');

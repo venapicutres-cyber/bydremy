@@ -30,6 +30,7 @@ export function useActivateClonedPage(
     page?.contentHtml,
     page?.hiddenSectionIds,
     page?.textOverrides,
+    page?.linkOverrides,
     page?.extraHtml,
     htmlLoaded,
     navigate,

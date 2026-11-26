@@ -5,6 +5,9 @@ import { SeoManager } from './components/SeoManager';
 import { SiteHeader } from './components/site/SiteHeader';
 import { CustomSiteLayout } from './layouts/CustomSiteLayout';
 import { CatalogPage } from './pages/CatalogPage';
+import { HomePage } from './pages/HomePage';
+import { DigitalGuestbookPage } from './pages/DigitalGuestbookPage';
+import { ContactUsPage } from './pages/ContactUsPage';
 import { TemplateDetailPage } from './pages/TemplateDetailPage';
 import { AboutPage } from './pages/AboutPage';
 import { ShareWaPage } from './pages/ShareWaPage';
@@ -33,14 +36,25 @@ function CloneRoutes() {
   // Drafts stay available in the dashboard preview but are not public.
   if (page.status === 'draft') return <NotFoundPage />;
   if (page.kind === 'home') {
+    // Admin custom HTML still wins; otherwise the homepage is React-rendered.
     return (
       <div className="bydreamy-home-shell">
         <div className="bydreamy-site">
           <SiteHeader />
         </div>
-        <ClonedPage key={page.id} pageId={page.id} />
+        {page.contentHtml ? (
+          <ClonedPage key={page.id} pageId={page.id} />
+        ) : (
+          <HomePage key={page.id} page={page} />
+        )}
       </div>
     );
+  }
+  // These original WordPress pages are now React components; admin custom HTML
+  // still takes precedence when present.
+  if (!page.contentHtml) {
+    if (page.slug === 'digital-guestbook') return <DigitalGuestbookPage key={page.id} page={page} />;
+    if (page.slug === 'contact-us') return <ContactUsPage key={page.id} page={page} />;
   }
   return <ClonedPage key={page.id} pageId={page.id} />;
 }

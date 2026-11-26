@@ -53,8 +53,12 @@ function startCountdown(element: CountdownHost) {
 }
 
 export function installJQueryCompat() {
-  const jq = (window as unknown as { jQuery?: JQueryStatic }).jQuery;
+  const globalWindow = window as unknown as { jQuery?: JQueryStatic; $?: JQueryStatic };
+  const jq = globalWindow.jQuery;
   if (!jq || typeof jq !== 'function' || !jq.fn) return;
+  // WordPress loads jQuery in no-conflict mode, but the cloned inline scripts
+  // still use `$`. Without this alias they throw `$ is not a function`.
+  if (!globalWindow.$) globalWindow.$ = jq;
   if (typeof jq.fn.countdown === 'function') return;
 
   jq.fn.countdown = function countdown(this: unknown) {

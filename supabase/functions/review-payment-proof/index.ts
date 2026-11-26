@@ -74,7 +74,12 @@ Deno.serve(async (request) => {
       p_order_id: orderId,
       p_auth_user_id: authUserId,
     });
-    if (activationError || !invitationId) throw new Error(activationError?.message || 'Undangan tidak dapat diaktifkan.');
+    if (activationError || !invitationId) {
+      // Kembalikan ke pending agar admin bisa mencoba lagi: antrean pembayaran
+      // dan halaman status hanya menerima pesanan dengan status pending.
+      await supabase.from('orders').update({ payment_status: 'pending' }).eq('id', orderId);
+      throw new Error(activationError?.message || 'Undangan tidak dapat diaktifkan.');
+    }
 
     const { error: metadataError } = await supabase.auth.admin.updateUserById(authUserId, {
       app_metadata: { role: 'editor', page_id: invitationId },

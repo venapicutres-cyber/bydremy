@@ -31,20 +31,6 @@ Deno.serve(async (request) => {
     if (orderError || !orderRows?.[0]) return json({ error: orderError?.message || 'Pesanan tidak dapat dibuat.' }, 400);
 
     const order = orderRows[0];
-    const { data: existing } = await supabase
-      .from('orders')
-      .select('payment_provider')
-      .eq('id', order.order_id)
-      .maybeSingle();
-
-    if (existing?.payment_provider !== 'manual_transfer') {
-      const { error: updateError } = await supabase
-        .from('orders')
-        .update({ payment_provider: 'manual_transfer', payment_status: 'unpaid', payment_reference: null })
-        .eq('id', order.order_id);
-      if (updateError) throw updateError;
-    }
-
     return json({ orderId: order.order_id, token: order.checkout_token });
   } catch (error) {
     console.error(error);

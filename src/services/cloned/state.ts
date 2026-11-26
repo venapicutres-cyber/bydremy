@@ -46,6 +46,25 @@ function setTextPreservingChildElements(target: HTMLElement, text: string) {
   }
 }
 
+function captureText(target: HTMLElement): () => void {
+  const walker = document.createTreeWalker(target, NodeFilter.SHOW_TEXT);
+  const nodes: Array<{ node: Text; value: string }> = [];
+  let current = walker.nextNode();
+  while (current) {
+    nodes.push({ node: current as Text, value: current.textContent || '' });
+    current = walker.nextNode();
+  }
+  return () => {
+    if (!nodes.length) {
+      if (target.firstChild?.nodeType === Node.TEXT_NODE) target.firstChild.remove();
+      return;
+    }
+    nodes.forEach(({ node, value }) => {
+      if (node.isConnected) node.textContent = value;
+    });
+  };
+}
+
 /**
  * Mirrors the document state a fresh WordPress request would have: body
  * classes, page title, scroll position, section visibility and copy edits.
@@ -69,8 +88,12 @@ export function applyPageState({ page, root, cleanups }: ClonedPageContext) {
   window.scrollTo(0, 0);
 
   (page.hiddenSectionIds || []).forEach((id) => {
-    root.querySelectorAll(`[data-id="${id}"]`).forEach((element) => {
-      (element as HTMLElement).style.display = 'none';
+    root.querySelectorAll<HTMLElement>(`[data-id="${id}"]`).forEach((element) => {
+      const previous = element.style.display;
+      element.style.display = 'none';
+      cleanups.push(() => {
+        element.style.display = previous;
+      });
     });
   });
 
@@ -103,8 +126,10 @@ export function applyPageState({ page, root, cleanups }: ClonedPageContext) {
     if (id.startsWith('hidden::') || id.startsWith('custom::')) return;
     const target = resolveTextTarget(root, id);
     if (!target) return;
+    const restore = captureText(target);
     if (id.includes('::path:')) setTextPreservingChildElements(target, text);
     else target.textContent = text;
+    cleanups.push(restore);
   });
 
   Object.entries(page.linkOverrides || {}).forEach(([from, to]) => {
@@ -113,11 +138,23 @@ export function applyPageState({ page, root, cleanups }: ClonedPageContext) {
     if (from.endsWith('::link')) {
       const widgetId = from.slice(0, -'::link'.length);
       const widget = root.querySelector<HTMLElement>(`[data-id="${widgetId}"]`);
-      widget?.querySelectorAll<HTMLAnchorElement>('a[href]').forEach((anchor) => anchor.setAttribute('href', to));
+      widget?.querySelectorAll<HTMLAnchorElement>('a[href]').forEach((anchor) => {
+        const previous = anchor.getAttribute('href');
+        anchor.setAttribute('href', to);
+        cleanups.push(() => {
+          if (!anchor.isConnected) return;
+          if (previous === null) anchor.removeAttribute('href');
+          else anchor.setAttribute('href', previous);
+        });
+      });
       return;
     }
     root.querySelectorAll<HTMLAnchorElement>('a[href]').forEach((anchor) => {
-      if (anchor.getAttribute('href') === from) anchor.setAttribute('href', to);
+      if (anchor.getAttribute('href') !== from) return;
+      anchor.setAttribute('href', to);
+      cleanups.push(() => {
+        if (anchor.isConnected) anchor.setAttribute('href', from);
+      });
     });
   });
 

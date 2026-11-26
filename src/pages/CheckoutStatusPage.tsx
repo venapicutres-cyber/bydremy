@@ -22,6 +22,7 @@ export function CheckoutStatusPage() {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploaded, setUploaded] = useState(false);
+  const [notFound, setNotFound] = useState(false);
   const order = params.get('order') || '';
   const token = params.get('token') || '';
 
@@ -31,7 +32,11 @@ export function CheckoutStatusPage() {
       const next = await getCheckoutStatus(order, token);
       if (next) {
         setStatus(next);
+        setNotFound(false);
         setError(null);
+      } else {
+        setNotFound(true);
+        setError('Sesi pembayaran tidak ditemukan.');
       }
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Status pembayaran tidak dapat diperiksa.');
@@ -64,7 +69,7 @@ export function CheckoutStatusPage() {
     }
   };
 
-  if (!order || !token) {
+  if (!order || !token || notFound) {
     return (
       <main className="checkout-status">
         <div className="checkout-status__card">
@@ -81,7 +86,7 @@ export function CheckoutStatusPage() {
   const Icon = status?.payment_status === 'settlement' ? CheckCircle2 : status?.payment_status === 'failed' || status?.payment_status === 'expired' ? XCircle : Clock3;
   const bank = db.settings;
   const hasBank = Boolean(bank.bankName || bank.bankAccountNumber || bank.bankAccountHolder);
-  const canUpload = status ? status.payment_status === 'unpaid' || status.payment_status === 'pending' : true;
+  const canUpload = status ? status.payment_status === 'unpaid' || status.payment_status === 'pending' : false;
 
   return (
     <main className="checkout-status">

@@ -1,5 +1,6 @@
 import type { PageRecord } from '../../data/types';
 import { initAnimations } from './animations';
+import { disableDeadLinks } from './deadLinks';
 import { initInvitation } from './invitation';
 import { initLightbox } from './lightbox';
 import { initMedia } from './media';
@@ -26,6 +27,7 @@ export function activateClonedPage({ page, root, navigate }: ActivateClonedPageO
   const context: ClonedPageContext = { page, root, navigate, cleanups, scrollCallbacks };
 
   applyPageState(context);
+  disableDeadLinks(context);
   installCompatGlobals(context);
   runPageScripts(context);
   initAnimations(context);
